@@ -1,0 +1,36 @@
+<odoo>
+    <report
+        id="sale_xlsx"
+        model="sale.order"
+        string="Print (XLSX)"
+        report_type="xlsx"
+        name="aos_product_dimension_cartoon.sale_report_xlsx"
+        file="aos_product_dimension_cartoon.sale_report_xlsx"
+        attachment_use="False"
+        print_report_name="(object.name+'.xlsx')"
+    />
+
+
+    <report
+        id="invoice_xlsx"
+        model="account.invoice"
+        string="Print (XLSX)"
+        report_type="xlsx"
+        name="aos_product_dimension_cartoon.invoice_report_xlsx"
+        file="aos_product_dimension_cartoon.invoice_report_xlsx"
+        attachment_use="False"
+        print_report_name="('Invoice - '+object.name+'.xlsx')"
+    />
+    
+
+    <report
+        id="purchase_xlsx"
+        model="purchase.order"
+        string="Print (XLSX)"
+        report_type="xlsx"
+        name="aos_product_dimension_cartoon.purchase_report_xlsx"
+        file="aos_product_dimension_cartoon.purchase_report_xlsx"
+        attachment_use="False"
+        print_report_name="(object.name+'.xlsx')"
+    />
+</odoo>

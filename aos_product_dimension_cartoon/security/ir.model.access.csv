@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_port_loading_group_system,Access Port Loading Group System,model_port_loading,base.group_system,1,1,1,1
+access_port_loading_sales_user,Access Port Loading Sales User,model_port_loading,sales_team.group_sale_salesman,1,0,0,0
+access_port_loading_group_account_invoice,Access Port Loading Billing User,model_port_loading,account.group_account_invoice,1,0,0,0
+access_port_loading_group_purchase_user,Access Port Loading Purchase User,model_port_loading,purchase.group_purchase_user,1,0,0,0

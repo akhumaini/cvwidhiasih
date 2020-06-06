@@ -1,0 +1,42 @@
+<odoo>
+    <record model="ir.ui.view" id="view_order_form_inherited">
+        <field name="name">View Order Form Inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[1]/group[2]" position="inside">
+                <field name="partner_uom_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                <field name="estimated_delivery_date" attrs="{'invisible':[('estimated_delivery_date','=',False)],'readonly':[('state','!=','draft')]}"/>
+                <field name="port_loading_id" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="buyer_remarks"/>
+                <field name="item_size_l"/>
+                <field name="item_size_w"/>
+                <field name="item_size_h"/>
+                <field name="qty_per_ctn"/>
+                <field name="case_pack_size_l"/>
+                <field name="case_pack_size_w"/>
+                <field name="case_pack_size_h"/>
+                
+
+                <field name="cbm_per_ctn"/>
+                <field name="qty_cartoon"/>
+                <field name="total_cbm"/>
+            </xpath> 
+
+            <xpath expr="//page[2]/group[1]/group[1]" position="inside">
+                <field name="estimate_delivery_days" attrs="{'readonly':[('state','!=','draft')]}"/>
+            </xpath>
+            <xpath expr="//page[2]/group[last()]"  position="after">
+                <group name="account_group" string="Account">
+                    <group name="bank_group" >
+                        <field name="bank_account_id" attrs="{'readonly':[('state','!=','draft')]}" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

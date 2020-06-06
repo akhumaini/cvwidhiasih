@@ -1,0 +1,40 @@
+<odoo>
+    <record model="ir.ui.view" id="view_template_property_form">
+        <field name="name">stock view template property form inherited</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                
+                <label for="item_size_l" string="Item Size"/>
+                <div class="o_address_format">
+                    <field name="item_size_l"/>
+                    <field name="item_size_w"/>
+                    <field name="item_size_h"/>
+                </div>
+                
+
+                <label for="case_pack_size_l" string="Case Pack Size"/>
+                <div class="o_address_format">
+                    <field name="case_pack_size_l"/>
+                    <field name="case_pack_size_w"/>
+                    <field name="case_pack_size_h"/>
+                </div>
+                
+                <field name="qty_per_ctn"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="uom_form_view_inherited">
+        <field name="name">UOM Form View Inherited</field>
+        <field name="model">product.uom</field>
+        <field name="inherit_id" ref="product.product_uom_form_view" />
+        <field name="arch" type="xml">
+            <field name="rounding" position="after">
+                <field name="cbm_ctn_factor"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="paperformat_id" ref="aos_product_dimension_cartoon.paperformat_landscape"/>
+    </record>
+
+    <template id="report_saleorder_document_inherit_landscape" inherit_id="sale.report_saleorder_document">
+      	<xpath expr="//t/t" position="replace">
+        	<t t-call="web.external_layout">
+                <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row" style="text-align: center; font-size:25 px;">
+                        <strong>QUOTATION</strong>
+                    </div>
+                    <br/>
+                    <div class="row" style="margin-top: 15 px;">
+                        <div class="col-xs-6">
+                            <strong>Seller Details</strong>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Name
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.company_id.display_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Address
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.company_id.partner_id.contact_address"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Phone No
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.company_id.partner_id.phone"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Email Address
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.company_id.partner_id.email"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <strong>Buyer Details</strong>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Name
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.partner_id.display_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Address
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.partner_id.contact_address"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Phone No
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.partner_id.phone"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Email Address
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.partner_id.email"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <strong>Quotation Details</strong>
+                            <div class="row">           
+                                <div class="col-xs-4">
+                                    Quotation No
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Quotation Date
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.date_order"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Sales Person
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.user_id.name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Mobile
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.user_id.partner_id.mobile"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Emails
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.user_id.partner_id.email"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Sales Terms
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.incoterm.display_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Estimated Deliveries
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.estimated_delivery_date"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Payment Terms
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.payment_term_id.display_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Port of Loading
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.port_loading_id.name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Bank Name
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.bank_account_id.display_name"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Bank Address
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.bank_account_id.address"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Bank A/C
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.bank_account_id.bank_acc_number"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    Swift Code
+                                </div>
+                                <div class="col-xs-8">
+                                   : <span t-field="doc.bank_account_id.swift_code"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-set="qty1" t-value="0"/>
+                    <t t-set="qty2" t-value="0"/>
+                    <t t-set="qty3" t-value="0"/>
+                    <t t-set="qty4" t-value="0"/>
+                    <t t-set="qty5" t-value="0"/>
+                    <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                        <table class="table" border="1" style="margin-top: 15px; border-collapse: collapse; border: 1px solid black;">
+                            <thead>
+                                <tr style="border: 1px solid black;">
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2">NO</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">ITEM CODE</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">DESCRIPTION</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">PRODUCT IMAGE</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">BUYER REMARKS</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (Inch(es))</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">QTY/CTN</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (Inch(es))</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">CBM/CTN</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">QTY CARTOON</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL QTY</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL CBM</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">PRICE</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL AMOUNT</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">L</th>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">W</th>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">H</th>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">L</th>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">W</th>
+                                    <th class="text-center" style="border: 1px solid black; vertical-align: middle;">H</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="page" t-as="layout_category">
+
+                                    <t t-if="layout_category_size &gt; 1 or page_size &gt; 1" groups="sale.group_sale_layout">
+                                        <tr class="active">
+                                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                                <t t-esc="layout_category['name']"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-set="no" t-value="1"/>
+                                    <t t-set="quantity" t-value="0"/>   
+                                    <t t-foreach="layout_category['lines']" t-as="l">
+                                        <tr style="border: 1px solid black;">
+                                            <td style="border: 1px solid black;" class="text-center"><span t-esc="no"/></td>
+                                            <t t-set="no" t-value="no+1"/> 
+                                            <td style="border: 1px solid black;" class="text-center"><span t-field="l.product_id.default_code"/></td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.name"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <img t-attf-src="/web/image/product.product/{{l.product_id.id}}/image_medium" t-attf-alt="card image {{l.product_id.display_name}}" style="width:160px; height:240px;"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.buyer_remarks"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.item_size_l"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.item_size_w"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.item_size_h"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.case_pack_size_l"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.case_pack_size_w"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.case_pack_size_h"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.qty_per_ctn"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.cbm_per_ctn"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.qty_cartoon"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.product_uom_qty"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.total_cbm"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.price_unit"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.price_subtotal"/>
+                                            </td>
+                                            <t t-set="qty1" t-value="qty1 + l.qty_cartoon"/>
+                                            <t t-set="qty2" t-value="qty2 + l.product_uom_qty"/>
+                                            <t t-set="qty3" t-value="qty3 + l.total_cbm"/>
+                                            <t t-set="qty4" t-value="qty4 + l.price_unit"/>
+                                            <t t-set="qty5" t-value="qty5 + l.price_subtotal"/>
+
+                                        </tr>
+                                    </t>
+                                    <tr style="border: 1px solid black;">
+                                        <t t-set="decimal_precision" t-value="request.env['decimal.precision'].precision_get('Product Price')"/>
+                                        <th style="border: 1px solid black;" colspan="13">GRAND TOTAL :</th>
+                                        <td style="border: 1px solid black;" class="text-center"><span t-esc="qty1" t-options='{"widget": "float", "precision": decimal_precision}'/></td>
+                                        <td style="border: 1px solid black;" class="text-center"><span t-esc="qty2" t-options='{"widget": "float", "precision": decimal_precision}'/></td>
+                                        <td style="border: 1px solid black;" class="text-center"><span t-esc="qty3" t-options='{"widget": "float", "precision": decimal_precision}'/></td>
+                                        <td style="border: 1px solid black;" class="text-center"><span t-esc="qty4" t-options='{"widget": "float", "precision": decimal_precision}'/></td>
+                                        <td style="border: 1px solid black;" class="text-center"><span t-esc="qty5" t-options='{"widget": "float", "precision": decimal_precision}'/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3 hidden">
+                            <strong>Payment Terms:</strong>
+                            <p t-field="doc.payment_term_id"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+      	</xpath>
+  	</template>
+</odoo>
