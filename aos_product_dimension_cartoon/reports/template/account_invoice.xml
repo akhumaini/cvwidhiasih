@@ -14,6 +14,7 @@
                     <div class="row" style="text-align: center; font-size:25 px;">
                         <strong>INVOICE</strong>
                     </div>
+                    <div name="reference" style="display:none;"></div>
                     <br/>
                     <div class="row" style="margin-top: 15 px;">
                         <div class="col-xs-6">

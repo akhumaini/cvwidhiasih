@@ -10,7 +10,7 @@
         Add scale on product
     """,
     'depends': [
-        'stock','purchase','sale','sales_team','account','report_xlsx',
+        'stock','purchase','sale_management','sales_team','account','report_xlsx',
     ],
     'data': [
         'views/port.xml',

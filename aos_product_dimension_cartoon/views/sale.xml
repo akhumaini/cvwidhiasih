@@ -27,8 +27,10 @@
                 <field name="total_cbm"/>
             </xpath> 
 
-            <xpath expr="//page[2]/group[1]/group[1]" position="inside">
-                <field name="estimate_delivery_days" attrs="{'readonly':[('state','!=','draft')]}"/>
+            <xpath expr="//page[2]/group[last()]" position="inside">
+                <group>
+                    <field name="estimate_delivery_days" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </group>
             </xpath>
             <xpath expr="//page[2]/group[last()]"  position="after">
                 <group name="account_group" string="Account">
