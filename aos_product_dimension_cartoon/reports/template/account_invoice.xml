@@ -11,6 +11,10 @@
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
                 <div class="page">
                     <div class="oe_structure"/>
+                    <div class="whead">
+                        
+                        <t t-call="aos_product_dimension_cartoon.widhiasih_header"/>
+                    </div>
                     <div class="row" style="text-align: center; font-size:25 px;">
                         <strong>INVOICE</strong>
                     </div>
@@ -32,7 +36,10 @@
                                     Address
                                 </div>
                                 <div class="col-xs-8">
-                                   : <span t-field="o.company_id.partner_id.contact_address"/>
+                                   : <span t-field="o.company_id.partner_id.street"/>
+                                    <span t-field="o.company_id.partner_id.street2"/>
+                                    <span t-field="o.company_id.partner_id.city"/>
+                                    <span t-field="o.company_id.partner_id.country_id.name"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -66,7 +73,10 @@
                                     Address
                                 </div>
                                 <div class="col-xs-8">
-                                   : <span t-field="o.partner_id.contact_address"/>
+                                   : <span t-field="o.partner_id.street"/>
+                                    <span t-field="o.partner_id.street2"/>
+                                    <span t-field="o.partner_id.city"/>
+                                    <span t-field="o.partner_id.country_id.name"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -90,10 +100,11 @@
                             <strong>Invoice Details</strong>
                             <div class="row">           
                                 <div class="col-xs-4">
-                                    Invoice No
+                                    <span t-if="o.state!='draft'">Invoice No</span>
+                                    <span t-if="o.state=='draft'">Draft Invoice</span>
                                 </div>
                                 <div class="col-xs-8">
-                                   : <span t-field="o.name"/>
+                                   <span t-if="o.state!='draft'">:</span> <span t-field="o.number"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -248,7 +259,7 @@
                                                 <span t-field="l.name"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
-                                                <img t-attf-src="/web/image/product.product/{{l.product_id.id}}/image_medium" t-attf-alt="card image {{l.product_id.display_name}}" style="width:160px; height:240px;"/>
+                                                <img t-attf-src="/web/image/product.product/{{l.product_id.id}}/image_medium" t-attf-alt="card image {{l.product_id.display_name}}" style="width:160px;"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.buyer_remarks"/>
@@ -263,6 +274,9 @@
                                                 <span t-field="l.item_size_h"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.qty_per_ctn"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.case_pack_size_l"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
@@ -271,9 +285,7 @@
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.case_pack_size_h"/>
                                             </td>
-                                            <td style="border: 1px solid black;" class="text-center">
-                                                <span t-field="l.qty_per_ctn"/>
-                                            </td>
+                                            
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.cbm_per_ctn"/>
                                             </td>

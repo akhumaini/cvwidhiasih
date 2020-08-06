@@ -11,6 +11,22 @@ class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     partner_uom_id = fields.Many2one(related="partner_id.uom_id", string="Unit", store=True, readonly=True)
+    errors = fields.Html(compute="_compute_errors")
+
+
+    def _check_partner_uom_errors(self):
+        for rec in self:
+            if rec.partner_id.id and not rec.partner_uom_id.id:
+                rec.errors = """          
+                <div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  Vendor Unit not Defined<br/>Please Set Vendor Unit!
+</div>"""
+
+    @api.depends('partner_uom_id')
+    def _compute_errors(self):
+        self._check_partner_uom_errors()
 
 
     def print_xls_report(self):
@@ -44,8 +60,14 @@ class PurchaseOrderLine(models.Model):
     def _compute_itemsize(self):
         for rec in self:
             res = {
-                'item_size_l':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_l, to_unit=rec.order_id.partner_uom_id),
-                'item_size_w':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_w, to_unit=rec.order_id.partner_uom_id),
-                'item_size_h':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_h, to_unit=rec.order_id.partner_uom_id),
+                'item_size_l':0.0,
+                'item_size_w':0.0,
+                'item_size_h':0.0,
             }
+            if rec.order_id.partner_uom_id.id:
+                res = {
+                    'item_size_l':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_l, to_unit=rec.order_id.partner_uom_id),
+                    'item_size_w':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_w, to_unit=rec.order_id.partner_uom_id),
+                    'item_size_h':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_h, to_unit=rec.order_id.partner_uom_id),
+                }
             rec.update(res)

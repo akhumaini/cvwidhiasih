@@ -1,197 +1,343 @@
 <?xml version="1.0"?>
 <odoo>
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[hasclass('footer')]/div[1]/ul[1]" position="replace"><ul></ul></xpath>
+    </template>
 
-    <record id="sale.action_report_saleorder" model="ir.actions.report">
-        <field name="paperformat_id" ref="aos_product_dimension_cartoon.paperformat_landscape"/>
-    </record>
+    <template id="widhiasih_header">
+        <div class="widhiheader">
+        
+            <table style="width:100%">
+                <tr>
+                    <td style="width:50%;">
+                        <!-- left -->
+                        <div class="col-md-6">
+                            <img class="complogo" t-attf-src="/web/image/res.partner/{{o.company_id.partner_id.id}}/image_medium" t-attf-alt="Company Logo {{o.company_id.partner_id.name}}" style="width:160px;"/>
+                        </div>
+                    </td>
 
-    <template id="report_saleorder_document_inherit_landscape" inherit_id="sale.report_saleorder_document">
-      	<xpath expr="//t/t" position="replace">
+                    <td style="text-align:right;width:50%;">
+                        <!-- RIGHT -->
+                        <div class="col-md-6">
+                            <div class="compheader_name">
+                                <h3 t-esc="o.company_id.name"></h3>
+                            </div>
+                            <div class="compheader_street">
+                                <span t-esc="o.company_id.partner_id.street"></span>&amp;nbsp;<span t-esc="o.company_id.partner_id.street2"></span>
+                            </div>
+                            <div class="compheader_city_state">
+                                <span t-esc="o.company_id.partner_id.city"></span> <span t-if="o.company_id.partner_id.state_id.id">-</span> <span t-esc="o.company_id.partner_id.state_id.name"></span>
+                                - <span t-esc="o.company_id.partner_id.country_id.name"></span>
+                            </div>
+
+                            <div class="compheader_city_phone">
+                                Phone: <span t-esc="o.company_id.partner_id.phone"></span>
+                            </div>
+
+                            <div class="compheader_city_website">
+                                <span style="color:green;" t-esc="o.company_id.partner_id.website"></span>
+                            </div>
+
+                            <div class="company_header_tagline">
+                                <span style="color:black;font-weight:normal;" t-esc="o.company_id.report_header"></span>
+                            </div>
+                            
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <template id="report_widhiasih_sale_doc">
+      	
         	<t t-call="web.external_layout">
                 <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)"/>
                 <div class="page">
                     <div class="oe_structure"/>
+                    <div class="whead">
+                        <t t-set="o" t-value="doc"/>
+                        <t t-call="aos_product_dimension_cartoon.widhiasih_header"/>
+                    </div>
                     <div class="row" style="text-align: center; font-size:25 px;">
-                        <strong>QUOTATION</strong>
+                        
+                        <span t-if="doc.state not in ['done','sale']">
+                            <strong t-if="printmode=='normal'">QUOTATION</strong>
+                            <strong t-if="printmode=='proforma'">PRO-FORMA INVOICE</strong>
+                        </span>
+                        <span t-if="doc.state in ['done','sale']">
+                            <strong>SALE ORDER</strong>
+                        </span>
                     </div>
                     <br/>
-                    <div class="row" style="margin-top: 15 px;">
-                        <div class="col-xs-6">
-                            <strong>Seller Details</strong>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Name
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.company_id.display_name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Address
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.company_id.partner_id.contact_address"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Phone No
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.company_id.partner_id.phone"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Email Address
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.company_id.partner_id.email"/>
-                                </div>
-                            </div>
-                            <br/>
-                            <strong>Buyer Details</strong>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Name
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.partner_id.display_name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Address
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.partner_id.contact_address"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Phone No
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.partner_id.phone"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Email Address
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.partner_id.email"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <strong>Quotation Details</strong>
-                            <div class="row">           
-                                <div class="col-xs-4">
-                                    Quotation No
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Quotation Date
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.date_order"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Sales Person
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.user_id.name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Mobile
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.user_id.partner_id.mobile"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Emails
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.user_id.partner_id.email"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Sales Terms
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.incoterm.display_name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Estimated Deliveries
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.estimated_delivery_date"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Payment Terms
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.payment_term_id.display_name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Port of Loading
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.port_loading_id.name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Bank Name
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.bank_account_id.display_name"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Bank Address
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.bank_account_id.address"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Bank A/C
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.bank_account_id.bank_acc_number"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    Swift Code
-                                </div>
-                                <div class="col-xs-8">
-                                   : <span t-field="doc.bank_account_id.swift_code"/>
-                                </div>
-                            </div>
-                        </div>
+                    
+                    <style type="text/css">
+                        table.contenttbl table{
+                            width:100%;
+                        }
+                        table.contenttbl table tr td{
+                            padding: 3px;
+                        }
+                    </style>
+                    <div class="row" style="margin: 25 px;">
+                        <table class="contenttbl" style="width:100%;">
+                            <tr>
+                                <td>
+                                    <table style="border: 1px solid black;">
+                                        <tr>
+                                            <td colspan="3"><strong>Seller Details</strong></td>
+                                        </tr>
+                                        <tr>
+                                        
+                                            <td width="130px">
+                                                Name
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td><span t-field="doc.company_id.display_name"/></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Address
+                                            </td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.company_id.partner_id.street"/>
+                                                <span t-field="doc.company_id.partner_id.street2"/>
+                                                <span t-field="doc.company_id.partner_id.city"/>
+                                                <span t-field="doc.company_id.partner_id.country_id.name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Phone No
+                                            </td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.company_id.partner_id.phone"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Email Address
+                                            </td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.company_id.partner_id.email"/>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-top:1px solid black;">
+                                            <td colspan="3">
+                                                <strong>Buyer Details</strong>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.partner_id.display_name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>PIC</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.pic_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Address</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.partner_id.street"/>
+                                                <span t-field="doc.partner_id.street2"/>
+                                                <span t-field="doc.partner_id.city"/>
+                                                <span t-field="doc.partner_id.country_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phone No</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.partner_id.phone" t-if="doc.partner_id.phone"/>
+                                            </td>
+                                        </tr>
+
+                                        
+                                        <tr>
+                                            <td>Email Address</td>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="doc.partner_id.email" t-if="doc.partner_id.email"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                
+                                <td>
+                                    <table width="550px;" style="border: 1px solid black;">
+                                        <!-- <tr>
+                                            <td width="130px">
+                                                
+                                                <strong t-if="doc.state not in ['done','sale']">
+                                                    Quotation Details
+                                                </strong>
+                                                <strong t-if="doc.state in ['done','sale']">
+                                                    Order Details
+                                                </strong>
+                                            </td>
+                                            <td width="13px"></td>
+                                            <td>
+                                                
+                                            </td>
+                                        </tr> -->
+
+                                        <tr>
+                                            <td>
+                                                
+                                                <span t-if="doc.state not in ('done','sale')">Quotation No</span>
+                                                <span t-if="doc.state in ['done','sale']">Order No</span>
+                                                
+                                                
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-esc="doc.name"/>
+                                            </td>
+                                        </tr>
+                                        
+
+                                        <tr>
+                                            <td width="130px">
+                                                <span t-if="doc.state not in ['done','sale']">
+                                                    Quotation Date
+                                                </span>
+                                                <span t-if="doc.state in ['done','sale']">
+                                                    Order Date
+                                                </span>
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.date_order"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Sales Person
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.user_id.name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Mobile
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.user_id.partner_id.mobile"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Emails
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.user_id.partner_id.email"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px" style="border-top:1px solid black;">
+                                                Sales Terms
+                                            </td>
+                                            <td width="13px" style="border-top:1px solid black;">:</td>
+                                            <td style="border-top:1px solid black;">
+                                                <span t-field="doc.incoterm.display_name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Estimated Deliveries
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.estimated_delivery_date"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Payment Terms
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.payment_term_id.display_name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Port of Loading
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.port_loading_id.name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Bank Name
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.bank_account_id.display_name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="130px">
+                                                Bank Address
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.bank_account_id.address"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="130px">
+                                                Bank A/C
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.bank_account_id.bank_acc_number"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="130px">
+                                                Swift Code
+                                            </td>
+                                            <td width="13px">:</td>
+                                            <td>
+                                                <span t-field="doc.bank_account_id.swift_code"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                     <t t-set="qty1" t-value="0"/>
                     <t t-set="qty2" t-value="0"/>
@@ -207,9 +353,9 @@
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">DESCRIPTION</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">PRODUCT IMAGE</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">BUYER REMARKS</th>
-                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (Inch(es))</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (<span t-esc="doc.partner_uom_id.name"/>)</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">QTY/CTN</th>
-                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (Inch(es))</th>
+                                    <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (<span t-esc="doc.partner_uom_id.name"/>)</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">CBM/CTN</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">QTY CARTOON</th>
                                     <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL QTY</th>
@@ -246,8 +392,8 @@
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.name"/>
                                             </td>
-                                            <td style="border: 1px solid black;" class="text-center">
-                                                <img t-attf-src="/web/image/product.product/{{l.product_id.id}}/image_medium" t-attf-alt="card image {{l.product_id.display_name}}" style="width:160px; height:240px;"/>
+                                            <td style="border: 1px solid black;" class="text-center" height="140px;">
+                                                <img t-attf-src="/web/image/product.product/{{l.product_id.id}}/image_medium" t-attf-alt="card image {{l.product_id.display_name}}" style="width:160px;"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.buyer_remarks"/>
@@ -262,6 +408,9 @@
                                                 <span t-field="l.item_size_h"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
+                                                <span t-field="l.qty_per_ctn"/>
+                                            </td>
+                                            <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.case_pack_size_l"/>
                                             </td>
                                             <td style="border: 1px solid black;" class="text-center">
@@ -270,9 +419,7 @@
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.case_pack_size_h"/>
                                             </td>
-                                            <td style="border: 1px solid black;" class="text-center">
-                                                <span t-field="l.qty_per_ctn"/>
-                                            </td>
+                                            
                                             <td style="border: 1px solid black;" class="text-center">
                                                 <span t-field="l.cbm_per_ctn"/>
                                             </td>
@@ -311,14 +458,53 @@
                                 </t>
                             </tbody>
                         </table>
-
-                        <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3 hidden">
-                            <strong>Payment Terms:</strong>
-                            <p t-field="doc.payment_term_id"/>
+                        
+                        <div name="terms_footer" t-if="doc.payment_term_id" class="col-lg-6">
+                            <strong>Terms and Conditions:</strong>
+                            <br/>
+                            <t t-if="doc.note">
+                                <t t-set="string_to_output" t-value="doc.note.split('\n')" />
+                                <t t-foreach="string_to_output" t-as="string_line">
+                                    <span t-esc="string_line"/>
+                                    <br />
+                                </t>
+                            </t>
+                            <!-- <span t-esc="doc.note" t-if="doc.note"/> -->
+                            <span t-esc="'-'" t-if="not doc.note"/>
                         </div>
                     </t>
                 </div>
             </t>
-      	</xpath>
+      	
   	</template>
+
+
+    <template id="report_widhiasih_saleorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="printmode" t-value="'normal'"/>
+                <t t-call="aos_product_dimension_cartoon.report_widhiasih_sale_doc" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_widhiasih_saleorder_proforma">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-set="printmode" t-value="'proforma'"/>
+                <t t-call="aos_product_dimension_cartoon.report_widhiasih_sale_doc" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <report 
+            id="action_report_saleorder_widhiasih"
+            string="Quotation / Order"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="aos_product_dimension_cartoon.report_widhiasih_saleorder" 
+            name="aos_product_dimension_cartoon.report_widhiasih_saleorder"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
+            paperformat="aos_product_dimension_cartoon.paperformat_landscape"/>
+    <function model="sale.order" name="disable_original_sale_report"/>
 </odoo>

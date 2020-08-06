@@ -16,6 +16,17 @@ class SaleOrder(models.Model):
     port_loading_id = fields.Many2one('port.loading', string="Port Loading")
     bank_account_id = fields.Many2one('account.journal', domain=[('type','=','bank')], string="Bank Name")
 
+    pic_id = fields.Many2one('res.partner', string="PIC", onupdate="cascade", ondelete="restrict")
+
+    @api.model
+    def disable_original_sale_report(self):
+        self.env.ref('sale.action_report_saleorder').unlink_action()
+        self.env.ref('purchase.report_purchase_quotation').unlink_action()
+        try:
+            self.env.ref('sale.action_report_pro_forma_invoice').unlink_action()
+        except:
+            pass
+
     def _compute_estimation_date(self):
         for rec in self:
             if rec.estimate_delivery_days:

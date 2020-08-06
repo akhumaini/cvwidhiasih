@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_trial_balance_view_aos_report_account" model="ir.ui.view">
+        <field name="name">Account Trial Balance</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <button name="check_report" position="attributes">
+                <attribute name="class">fa fa-print oe_highlight</attribute>
+            </button>
+            <button name="check_report" position="after">
+                <button class="fa fa-file-excel-o oe_highlight" name="xls_export" string="Export" type="object" context="{'xls_export':1}"/>
+            </button>
+        </field>
+    </record>
+</odoo>

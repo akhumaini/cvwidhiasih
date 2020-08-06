@@ -16,43 +16,182 @@ class InvoiceReportXlsx(models.AbstractModel):
 		quo_header_format = workbook.add_format({
 			'bold':1,
 		})
+
+		quo_header_format_border_bottom = workbook.add_format({
+			'bold':1,
+			'bottom':1,
+		})
+
+		quo_header_format_border_right = workbook.add_format({
+			'right':1,
+		})
+		quo_header_format_border_left = workbook.add_format({
+			'left':1,
+			'bold':1,
+		})
+		quo_header_format_border_left_bottom = workbook.add_format({
+			'left':1,
+			'bottom':1,
+			'bold':1,
+		})
+
+		quo_header_format_border_right_bottom = workbook.add_format({
+			'right':1,
+			'bottom':1,
+			
+		})
+
+		quo_header_format_border_left_top = workbook.add_format({
+			'left':1,
+			'top':1,
+		})
+		quo_header_format_border_right_top = workbook.add_format({
+			'right':1,
+			'top':1,
+		})
+		
+
+		addr_format = workbook.add_format({
+			'bold':1,
+		})
+		addr_format.set_text_wrap()
+
+		quo_header_format_border = workbook.add_format({
+			'bold':1,
+			'top':2,
+			'left':1,
+			'right':1,
+		})
+		doubledotformat = workbook.add_format({
+			'align':'right'
+		})
+
+		row=1
+
+		if record.company_id.partner_id.image_medium:
+			base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+			url = '%s/%s' % (base_url, 'web/image?model=%s&field=%s&id=%s' % ('res.partner','image_medium',record.company_id.partner_id.id))
+			
+			
+			f = BytesIO(base64.b64decode(record.company_id.partner_id.image_medium))
+
+			
+			imgoptions = {'y_scale': 0.9,'x_scale':0.9, 'image_data':f, 'x_offset': 10, 'y_offset':10}
+			sheet.insert_image('A%s' % row, 'product%s.jpg' % (record.company_id.partner_id.name,), imgoptions)
+
+		# LEFT COMPANY INFO
+		# COMPANY NAME IN BIG FONT
+		sheet.merge_range("H1:R1", record.company_id.partner_id.name.upper(), workbook.add_format({
+			'font_size':24,
+			'bold':1,
+			'align':'right'
+		}))
+
+		company_header2 = workbook.add_format({
+			'font_size':11,
+			'bold':1,
+			'align':'right'
+		})
+
+		sheet.merge_range("H2:R2", record.company_id.partner_id.street + " %s" % (record.company_id.partner_id.street2 or '',)  , company_header2)
+
+		sheet.merge_range("H3:R3", '%s%s%s%s%s' % (
+				record.company_id.partner_id.city or '', 
+				' - ' if record.company_id.partner_id.state_id.name else '', 
+				record.company_id.partner_id.state_id.name or '', 
+				' - ' if record.company_id.partner_id.country_id.id else '', 
+				record.company_id.partner_id.country_id.name or '', 
+			), 
+			company_header2
+		)
+
+
+		sheet.merge_range("H4:R4", 'Phone: %s' % (record.company_id.partner_id.phone or '',)  , company_header2)
+		sheet.merge_range("H5:R5", '%s' % (record.company_id.partner_id.website or '',)  , workbook.add_format({
+			'font_size':11,
+			'font_color':'green',
+			'bold':1,
+			'align':'right',
+		}))
+		sheet.merge_range("H6:R6", '%s' % (record.company_id.report_header or '',)  , workbook.add_format({
+			'font_size':11,
+			'bold':1,
+			'align':'right',
+		}))
+
+		row = header2row = 8
+		# worksheet.set_column('A:R', 12)
+		TITLE = workbook.add_format({
+			'bold':1,
+			'border':0,
+			'align':'center',
+			'valign':'vcenter',
+			'fg_color':'#d0f7f7',
+			'font_size':16
+		})
+		
+		sheet.merge_range('A%s:R%s' % (row, row,), 'INVOICE', TITLE)
+
+		
 		
 
 		# single record
-		sheet.write('A4','Seller Details',quo_header_format)
+		row+=1
+		sheet.write('A%s' % row,'Seller Details',quo_header_format)
 		
 		
-		sheet.write('A5','Name',quo_header_format)
-		sheet.write('C5', record.company_id.display_name)
+		row+=1
+		sheet.write('A%s' % row,'Name',quo_header_format)
+		sheet.write('C%s' % row, record.company_id.display_name)
 		
-		sheet.write('A6','Address', quo_header_format)
-		sheet.write('C6', record.company_id.partner_id.contact_address)
+		row+=1
+		sheet.write('A%s' % row,'Address', quo_header_format)
+		sheet.write('C%s' % row, '{} {} {} {}'.format(
+			record.company_id.partner_id.street,
+			record.company_id.partner_id.street2,
+			record.company_id.partner_id.city,
+			record.company_id.partner_id.country_id.name,
+		))
 		
-		sheet.write('A7','Phone No.', quo_header_format)
-		sheet.write('C7', record.company_id.partner_id.phone)
-
-		sheet.write('A8','Email Address', quo_header_format)
-		sheet.write('C8', record.company_id.partner_id.email)
-
-		sheet.write('A10','Buyer Detail', quo_header_format)
-		sheet.write('C10', record.partner_id.display_name)
-
-		sheet.write('A11','Name', quo_header_format)
-		sheet.write('C11', record.partner_id.display_name)
+		row+=1
+		sheet.write('A%s' % row,'Phone No.', quo_header_format)
+		sheet.write('C%s' % row, record.company_id.partner_id.phone)
 
 
-		sheet.write('A12','Address', quo_header_format)
-		sheet.write('C12', record.partner_id.contact_address)
+		row+=1
+		sheet.write('A%s' % row,'Email Address', quo_header_format)
+		sheet.write('C%s' % row, record.company_id.partner_id.email)
 
-		sheet.write('A13','Phone No.', quo_header_format)
-		sheet.write('C13', record.partner_id.phone)
-		sheet.write('A14','Email Address', quo_header_format)
-		sheet.write('C14', record.partner_id.email)
+		row+=1
+		sheet.write('A%s' % row,'Buyer Detail', quo_header_format)
+		sheet.write('C%s' % row, record.partner_id.display_name)
+
+		row+=1
+		sheet.write('A%s' % row,'Name', quo_header_format)
+		sheet.write('C%s' % row, record.partner_id.display_name)
+
+		row+=1
+		sheet.write('A%s' % row,'Address', quo_header_format)
+		sheet.write('C%s' % row, '{} {} {} {}'.format(
+			record.partner_id.street,
+			record.partner_id.street2,
+			record.partner_id.city,
+			record.partner_id.country_id.name,
+		))
+
+		row+=1
+		sheet.write('A%s' % row,'Phone No.', quo_header_format)
+		sheet.write('C%s' % row, record.partner_id.phone)
+
+		row+=1
+		sheet.write('A%s' % row,'Email Address', quo_header_format)
+		
+		sheet.write('C%s' % row, record.partner_id.email)
 
 
 
 		# RIGHT
-		row = 4
+		row = header2row + 1
 		
 		sheet.write('M%s' % row,'Invoice No', quo_header_format)
 		sheet.write('P%s' % row,record.name or '-')
@@ -222,21 +361,12 @@ class InvoiceReportXlsx(models.AbstractModel):
 			# C
 			sheet.set_column(2,2,40)
 			# D
-			sheet.set_column(3,3,40)
+			sheet.set_column(3,3,30)
 			# E
 			sheet.set_column(4,4,15)
+			sheet.set_column(18,20,30)
 
-			# worksheet.set_column('A:R', 12)
-			TITLE = workbook.add_format({
-				'bold':1,
-				'border':0,
-				'align':'center',
-				'valign':'vcenter',
-				'fg_color':'#d0f7f7',
-				'font_size':16
-			})
 			
-			sheet.merge_range('A1:R2', 'INVOICE', TITLE)
 
 			row = self._add_header(sheet, data, obj, workbook)+1
 

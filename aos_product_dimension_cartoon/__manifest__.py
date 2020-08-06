@@ -13,6 +13,7 @@
         'stock','purchase','sale_management','sales_team','account','report_xlsx',
     ],
     'data': [
+        'data/paper_format_landscape.xml',
         'views/port.xml',
         'views/journal.xml',
         'views/product.xml',
@@ -24,7 +25,7 @@
         'reports/reports.xml',
 
         'security/ir.model.access.csv',
-        'data/paper_format_landscape.xml',
+        
 
         'reports/template/sale_order.xml',
         'reports/template/account_invoice.xml',

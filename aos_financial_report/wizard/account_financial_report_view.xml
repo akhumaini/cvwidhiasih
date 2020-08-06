@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<report 
+        id="account_financial_profit_loss_xls"
+        model="accounting.report"
+        string="Financial Report"
+        report_type="xls"
+        name="account.financial.profit.loss.aos.xls"
+        file="account.financial.profit.loss.aos.xls"
+        attachment_use="False"
+    />
+    
+    <record id="accounting_report_view_aos_report_account" model="ir.ui.view">
+        <field name="name">Accounting Report</field>
+        <field name="model">accounting.report</field>
+        <field name="inherit_id" ref="account.accounting_report_view"/>
+        <field name="arch" type="xml">        	
+        	<field name="label_filter" position="before">
+                <field name="multi_period"/>
+            </field>
+        	<field name="label_filter" position="attributes">
+                <attribute name="attrs">{'required': [('enable_filter', '=', True),('multi_period', '=', False)]}</attribute>
+            </field>
+        </field>
+    </record>
+    
+    <record id="account_common_report_view_aos_report_account" model="ir.ui.view">
+        <field name="name">Accounting Report</field>
+        <field name="model">accounting.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+        	<field name="date_to" position="after">
+                <field name="flag"/>
+                <!-- <field name="report_method"/> -->
+            </field>
+            <button name="check_report" position="attributes">
+                <attribute name="class">fa fa-print oe_highlight</attribute>
+            </button>
+            <button name="check_report" position="after">
+                <button class="fa fa-file-excel-o oe_highlight" name="xls_export" string="Export" type="object" context="{'xls_export':1}"/>
+            </button>
+        </field>
+    </record>
+    
+    <!-- <record id="financial_reporting_save_form" model="ir.ui.view">
+        <field name="name">Financial Reporting</field>
+        <field name="model">financial.report.save</field>
+        <field name="arch" type="xml">
+            <form string="Financial Reporting">
+	            <field name="name" invisible="1"/>
+	            <div>
+                     <h2>Download Report</h2>
+                     <p>Here is the Excel Report: <field name="data" readonly="1" filename="name"/></p>
+                 </div>
+                 <footer>
+                 	<button string="Close" class="btn-default" special="cancel"/>
+                 </footer>
+            </form>
+        </field>
+    </record> -->
+
+</odoo>

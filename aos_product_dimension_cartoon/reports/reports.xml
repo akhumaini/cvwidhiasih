@@ -7,8 +7,22 @@
         name="aos_product_dimension_cartoon.sale_report_xlsx"
         file="aos_product_dimension_cartoon.sale_report_xlsx"
         attachment_use="False"
-        print_report_name="(object.name+'.xlsx')"
+        print_report_name="'%s%s' % ('Quotation - ' if object.state=='draft' else '', object.name,)"
     />
+
+    <report
+        id="sale_proforma"
+        model="sale.order"
+        string="PRO-FORMA"
+        report_type="qweb-pdf"
+        name="aos_product_dimension_cartoon.report_widhiasih_saleorder_proforma"
+        file="aos_product_dimension_cartoon.report_widhiasih_saleorder_proforma"
+        attachment_use="False"
+        print_report_name="'%s - %s' % ('PRO-FORMA INVOICE', object.name,)"
+        paperformat="aos_product_dimension_cartoon.paperformat_landscape"/>
+    />
+
+    
 
 
     <report
@@ -19,7 +33,7 @@
         name="aos_product_dimension_cartoon.invoice_report_xlsx"
         file="aos_product_dimension_cartoon.invoice_report_xlsx"
         attachment_use="False"
-        print_report_name="('Invoice - '+object.name+'.xlsx')"
+        print_report_name="'%s%s' % ('Draft - ' if object.state=='draft' else '', object.display_name,)"
     />
     
 
@@ -31,6 +45,6 @@
         name="aos_product_dimension_cartoon.purchase_report_xlsx"
         file="aos_product_dimension_cartoon.purchase_report_xlsx"
         attachment_use="False"
-        print_report_name="(object.name+'.xlsx')"
+        print_report_name="'%s%s' % ('Quotation - ' if object.state=='draft' else '', object.name,)"
     />
 </odoo>

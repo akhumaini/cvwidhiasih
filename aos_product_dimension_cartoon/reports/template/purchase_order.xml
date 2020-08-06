@@ -11,8 +11,14 @@
                 <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
                 <div class="page">
                     <div class="oe_structure"/>
+                    <div class="whead" style="margin-top:-30px;">
+                        
+                        <t t-call="aos_product_dimension_cartoon.widhiasih_header"/>
+                    </div>
                     <div class="row" style="text-align: center; font-size:25 px;">
-                        <strong>PURCHASE</strong>
+                        <strong t-if="o.state in ('done','purchase')">PURCHASE ORDER</strong>
+                        <strong t-if="o.state in ('draft','sent','to approve')">REQUEST FOR QUOTATION</strong>
+                        <strong t-if="o.state in ('cancel')">CANCELED PO</strong>
                     </div>
                     <br/>
                     <div class="row" style="margin-top: 15 px;">
@@ -31,7 +37,10 @@
                                     Address
                                 </div>
                                 <div class="col-xs-8">
-                                   : <span t-field="o.company_id.partner_id.contact_address"/>
+                                   : <span t-field="o.company_id.partner_id.street"/>
+                                    <span t-field="o.company_id.partner_id.street2"/>
+                                    <span t-field="o.company_id.partner_id.city"/>
+                                    <span t-field="o.company_id.partner_id.country_id.name"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -65,7 +74,10 @@
                                     Address
                                 </div>
                                 <div class="col-xs-8">
-                                   : <span t-field="o.partner_id.contact_address"/>
+                                   : <span t-field="o.partner_id.street"/>
+                                    <span t-field="o.partner_id.street2"/>
+                                    <span t-field="o.partner_id.city"/>
+                                    <span t-field="o.partner_id.country_id.name"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -140,8 +152,8 @@
                                     Estimated Deliveries
                                 </div>
                                 <div class="col-xs-8">
-                                    : 
-                                   <!-- : <span t-field="o.estimated_delivery_date"/> -->
+                                    
+                                   : <span t-esc="datetime.datetime.strptime(o.date_planned, '%Y-%m-%d %H:%M:%S').strftime('%d/%m/%Y')"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -193,7 +205,7 @@
                                 <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">DESCRIPTION</th>
                                 <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">PRODUCT IMAGE</th>
                                 
-                                <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (Inch(es))</th>
+                                <th style="border: 1px solid black; vertical-align: middle;" colspan="3" class="text-center">ITEM SIZE (<span t-esc="o.partner_uom_id.name"/>)</th>
                                 <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL QTY</th>
                                 <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">PRICE</th>
                                 <th style="border: 1px solid black; vertical-align: middle;" rowspan="2" class="text-center">TOTAL AMOUNT</th>
@@ -215,7 +227,7 @@
                                     <span t-field="line.name"/>
                                 </td>
                                 <td style="border: 1px solid black;" class="text-center">
-                                    <img t-attf-src="/web/image/product.product/{{line.product_id.id}}/image_medium" t-attf-alt="card image {{line.product_id.display_name}}" style="width:160px; height:240px;"/>
+                                    <img t-attf-src="/web/image/product.product/{{line.product_id.id}}/image_medium" t-attf-alt="card image {{line.product_id.display_name}}" style="width:160px;"/>
                                 </td>
                                 
                                 <td style="border: 1px solid black;" class="text-center">
@@ -250,6 +262,20 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div name="terms_footer" t-if="o.payment_term_id" class="col-lg-6">
+                        <strong>Terms and Conditions:</strong><span t-esc="'-'" t-if="not o.notes"/>
+                        <br/>
+                        <t t-if="o.notes">
+                            <t t-set="string_to_output" t-value="o.notes.split('\n')" />
+                            <t t-foreach="string_to_output" t-as="string_line">
+                                <span t-esc="string_line"/>
+                                <br />
+                            </t>
+                        </t>
+                        <!-- <span t-esc="o.notes" t-if="o.notes"/> -->
+                        <span t-esc="'-'" t-if="not o.notes"/>         
+                    </div>
                 </div>
             </t>
       	</xpath>

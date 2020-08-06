@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<!-- <menuitem id="account.menu_finance_legal_statement" name="Legal Reports" parent="account.menu_finance_reports"/> -->
+        <!-- Account Reports -->
+        <record id="view_account_financial_report_form_aos_report_account" model="ir.ui.view">
+            <field name="name">account.financial.report.form.aos_report_account</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_financial_report_form"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="before">
+            		<field name="code"/>
+            	</field>
+            	<page position="after">
+                    <page string="Report Style">
+	                    <group col="4">
+	                        <field name="report_method"/>
+		            		<field name="special_date_changer"/>
+		            		<field name="style_font_xls"/>
+		            		<field name="color_font_xls"/>
+		            		<field name="color_fill_xls"/>
+		            		<field name="border_xls"/>
+		            		<field name="child_level"/>
+		            		<field name="date_range_type"/>
+		            		<field name="strict_range"/>
+	                    </group>
+                	</page>
+                </page>
+            	<field name="account_report_id" position="after">
+            		<field name="account_report_ids" widget="many2many_tags" placeholder="Multi Report Values (Sum)"/>
+            	</field>
+            	<notebook position="attributes">
+            		<attribute name="attrs">{'invisible': [('type','not in',['accounts','account_type', 'account_report','account_report_monthly'])]}</attribute>
+            	</notebook>
+            	<field name="account_report_id" position="attributes">
+            		<attribute name="attrs">{'invisible': [('type', 'not in', ('account_report','account_report_monthly'))]}</attribute>
+            	</field>
+            </field>
+        </record>
+        <record id="view_account_financial_report_tree_aos_report_account" model="ir.ui.view">
+            <field name="name">account.financial.report.tree.aos_report_account</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_financial_report_tree"/>
+            <field name="arch" type="xml">
+            	<field name="name" position="before">
+            		<field name="sequence"/>         	
+            		<field name="code"/>
+            	</field>
+            </field>
+        </record>
+        <record id="view_account_financial_report_search_aos_report_account" model="ir.ui.view">
+            <field name="name">account.financial.report.search.aos_report_account</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_financial_report_search"/>
+            <field name="arch" type="xml">            	
+            	<field name="name" position="before">
+            		<field name="code"/>
+            	</field>
+            </field>
+        </record>
+        
+        <!-- <record id="view_account_report_tree_hierarchy_aos_report_account" model="ir.ui.view">
+            <field name="name">account.report.hierarchy.aos_report_account</field>
+            <field name="model">account.financial.report</field>
+            <field name="inherit_id" ref="account.view_account_report_tree_hierarchy"/>
+            <field name="field_parent">children_ids</field>
+            <field name="arch" type="xml">                            	
+            	<field name="name" position="before">
+            		<field name="code"/>
+            	</field>
+            </field>
+        </record> -->
+    </data>
+</openerp>

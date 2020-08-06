@@ -78,22 +78,40 @@ class AccountInvoiceLine(models.Model):
     @api.depends('product_id','invoice_id.partner_id', 'quantity')
     def _compute_itemsize(self):
         for rec in self:
-            case_pack_size_l = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_l, to_unit=rec.invoice_id.partner_uom_id)
-            case_pack_size_w = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_w, to_unit=rec.invoice_id.partner_uom_id)
-            case_pack_size_h = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_h, to_unit=rec.invoice_id.partner_uom_id)
-            cbm_per_ctn = (case_pack_size_l*case_pack_size_w*case_pack_size_h)/rec.invoice_id.partner_uom_id.cbm_ctn_factor or 1
-            qty_cartoon = rec.quantity/rec.product_id.qty_per_ctn if rec.product_id.qty_per_ctn > 0.0 else 0.0
-            res = {
-                'item_size_l':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_l, to_unit=rec.invoice_id.partner_uom_id),
-                'item_size_w':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_w, to_unit=rec.invoice_id.partner_uom_id),
-                'item_size_h':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_h, to_unit=rec.invoice_id.partner_uom_id),
-                'case_pack_size_l':case_pack_size_l,
-                'case_pack_size_w':case_pack_size_w,
-                'case_pack_size_h':case_pack_size_h,
-                
-                'qty_per_ctn':rec.product_id.qty_per_ctn,
-                'cbm_per_ctn':cbm_per_ctn,
-                'qty_cartoon':qty_cartoon,
-                'total_cbm':cbm_per_ctn*qty_cartoon,
-            }
+            try:
+            
+                case_pack_size_l = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_l, to_unit=rec.invoice_id.partner_uom_id)
+                case_pack_size_w = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_w, to_unit=rec.invoice_id.partner_uom_id)
+                case_pack_size_h = rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.case_pack_size_h, to_unit=rec.invoice_id.partner_uom_id)
+                cbm_per_ctn = (case_pack_size_l*case_pack_size_w*case_pack_size_h)/rec.invoice_id.partner_uom_id.cbm_ctn_factor or 1
+                qty_cartoon = rec.quantity/rec.product_id.qty_per_ctn if rec.product_id.qty_per_ctn > 0.0 else 0.0
+                res = {
+                    'item_size_l':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_l, to_unit=rec.invoice_id.partner_uom_id),
+                    'item_size_w':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_w, to_unit=rec.invoice_id.partner_uom_id),
+                    'item_size_h':rec.product_id.size_unit_id._compute_quantity(qty=rec.product_id.item_size_h, to_unit=rec.invoice_id.partner_uom_id),
+                    'case_pack_size_l':case_pack_size_l,
+                    'case_pack_size_w':case_pack_size_w,
+                    'case_pack_size_h':case_pack_size_h,
+                    
+                    'qty_per_ctn':rec.product_id.qty_per_ctn,
+                    'cbm_per_ctn':cbm_per_ctn,
+                    'qty_cartoon':qty_cartoon,
+                    'total_cbm':cbm_per_ctn*qty_cartoon,
+                }
+            except Exception as E:
+                print(E)
+                qty_cartoon = rec.quantity/rec.product_id.qty_per_ctn if rec.product_id.qty_per_ctn > 0.0 else 0.0
+                res = {
+                    'item_size_l':0.0,
+                    'item_size_w':0.0,
+                    'item_size_h':0.0,
+                    'case_pack_size_l':0.0,
+                    'case_pack_size_w':0.0,
+                    'case_pack_size_h':0.0,
+                    
+                    'qty_per_ctn':rec.product_id.qty_per_ctn,
+                    'cbm_per_ctn':0.0,
+                    'qty_cartoon':qty_cartoon,
+                    'total_cbm':0.0*qty_cartoon,
+                }
             rec.update(res)

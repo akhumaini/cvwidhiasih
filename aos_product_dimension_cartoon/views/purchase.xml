@@ -4,6 +4,9 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']" position="before">
+                <field name="errors"/>
+            </xpath>
             <xpath expr="//form/sheet/group[1]/group[2]" position="inside">
                 <field name="partner_uom_id"/>
             </xpath>
