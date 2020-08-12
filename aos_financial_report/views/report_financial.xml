@@ -3,7 +3,7 @@
 <template id="account.report_financial">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
-            <t t-call="report.internal_layout">
+            <t t-call="web.internal_layout">
                 <div class="page">
                     <h2 t-esc="data['account_report_id'][1]"/>
 

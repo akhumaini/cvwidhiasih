@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>		
+		<report 
+	        id="account_general_ledger_xlsx"
+	        model="account.report.general.ledger"
+	        string="General Ledger Report"
+	        report_type="xlsx"
+	        name="account.general.ledger.report.aos.xlsx"
+	        file="General Ledger"
+	        attachment_use="False"
+	    />
+		<!-- Wizard Report Picking	-->
+		<record id="account_report_general_ledger_view_excel" model="ir.ui.view">
+	        <field name="name">General Ledger</field>
+	        <field name="model">account.report.general.ledger</field>
+	        <field name="inherit_id" ref="account.account_common_report_view"/>
+	        <field name="arch" type="xml">
+		        <data>
+		        	<field name="date_to" position="after">
+		        		<field name="amount_currency"/>
+		        		<field name="display_type" widget="radio"/>
+		        	</field>
+			        <xpath expr="//footer/button[@name='check_report']" position="attributes">
+                        <attribute name="class">fa fa-print oe_highlight</attribute>
+			        </xpath>
+			        <xpath expr="//footer/button[@name='check_report']" position="after">
+			        	<button class="fa fa-file-excel-o oe_highlight" name="xls_export" string="Export" type="object" context="{'xls_export':1}" colspan="2"/>
+			        </xpath>
+			        <field name="journal_ids" position="attributes">
+                        <attribute name="string">Filter on Journals</attribute>
+                    </field>
+			        <field name="journal_ids" position="after">
+                        <field name="account_id" options="{'no_create': True}"/>
+                    </field>
+			        <!-- <field name="journal_ids" position="after">
+                        <field name="analytic_account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </field> -->
+		        </data>
+	        </field>
+	    </record>
+	    	
+    
+	</data>
+</openerp>
