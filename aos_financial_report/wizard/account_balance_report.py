@@ -1,7 +1,7 @@
-
 import time
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.aos_common_report_header.report.report_xls import ReportXls
+from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang, format_date
 #from __builtin__ import True
 import logging
@@ -69,7 +69,7 @@ class AccountBalance(models.TransientModel):
                 `debit`: total amount of debit,
                 `balance`: total amount of balance,
         """
-
+ 
         account_result = {}
         # Prepare sql query base on selected parameters from wizard
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
@@ -87,7 +87,7 @@ class AccountBalance(models.TransientModel):
         self.env.cr.execute(request, params)
         for row in self.env.cr.dictfetchall():
             account_result[row.pop('id')] = row
-
+ 
         account_res = []
         for account in accounts:
             res = dict((fn, 0.0) for fn in ['credit', 'debit', 'balance'])
@@ -108,6 +108,10 @@ class AccountBalance(models.TransientModel):
     
     @api.multi
     def _action_excel(self, report_data, data):
+#         print("xxxxxxxxxxxxxxxx")
+#         print(report_data)
+#         print("xxxxxxxxxxxxxxxx11")
+#         print(data)
         wb = xlwt.Workbook(encoding="utf-8")
         ws = wb.add_sheet('Trial Balance')
         row_pos = 0
@@ -189,23 +193,28 @@ class AccountBalance(models.TransientModel):
             'target': 'new'
         }
 
+    
     @api.multi
     def xls_export(self):
+        self.ensure_one()
         data = {}
         data['ids'] = self.env.context.get('active_ids', [])
         data['model'] = self.env.context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move'])[0]
-        data = self.pre_print_report(data)
-        self.model = self.env.context.get('active_model', 'ir.ui.menu')
+        used_context = self._build_contexts(data)
+        data['form']['used_context'] = dict(used_context, lang=self.env.context.get('lang') or 'en_US')
+        report_data = self.with_context(discard_logo_check=True)._print_report(data)
+#         Get data ACCOUNT with Value
+        self.model = self.env.context.get('active_model', 'account.balance.report')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')
         accounts = docs if self.model == 'account.account' else self.env['account.account'].search([])
-        account_res = self._get_accounts(accounts, display_account)
-        context = self._context
+        account_res = self.with_context(data['form'].get('used_context'))._get_accounts(accounts, display_account)
         
-        if context.get('xls_export'):
-            report_data = self._print_report(data)
-            return self._action_excel(report_data, account_res)
+        return self._action_excel(report_data, account_res)
+
+    
+    
 
 
 
