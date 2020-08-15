@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name' : 'General Ledger Report XLSX',
-    'version' : '11.0.0.1.0',
+    'version' : '10.0.0.1.0',
     'license': 'AGPL-3',
     'summary': 'General Ledger Report',
     'sequence': 1,

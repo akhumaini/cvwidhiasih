@@ -164,7 +164,7 @@ class AccountReportGeneralLedger(models.TransientModel):
                     ws.write(row_count,6,line['debit'],line_style)
                     ws.write(row_count,7,line['credit'],line_style)
                     ws.write(row_count,8,line['balance'],line_style)
-                    if data['amount_currency'] and line['amount_currency'] > 0.0:
+                    if data['amount_currency'] and (line['amount_currency'] is not None and line['amount_currency'] > 0.0):
                         ws.write(row_count,9,line['amount_currency'],line_style)
                         ws.write(row_count,10,line['currency_code'],line_style)
                     row_count += 1
