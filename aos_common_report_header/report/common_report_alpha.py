@@ -202,11 +202,15 @@ class CommonReportAlpha(models.TransientModel, common_report_header):
         if data.get('journal_ids', False):
             codes = [journal.code for journal in self.env['account.journal'].browse(data['journal_ids'])]
         if not data['account_id']:
-            account_ids = self.env['account.account'].search([])
+            accounts = self.env['account.account'].search([])
         else:
-            account_ids = self.env['account.account'].search([('id','in',[data['account_id'][0]])])
-        accounts = self.env['account.account'].browse(account_ids)
-        accounts_res = self._get_account_move_entry(accounts, init_balance, sortby, display_account, context=context)
+            accounts = self.env['account.account'].search([('id','in',[data['account_id'][0]])])
+        #print ('===account_ids===',account_ids)
+        #accounts = self.env['account.account'].browse(account_ids)
+        #accounts = self.env['account.account'].search([])
+        accounts_res = self.with_context(data.get('used_context',{}))._get_account_move_entry(accounts, init_balance, sortby, display_account)
+        #accounts_res = self._get_account_move_entry(accounts, init_balance, sortby, display_account, context=context)
+        #accounts_res = self._get_account_move_entry(accounts, init_balance, sortby, display_account)
         return accounts_res
     
     
