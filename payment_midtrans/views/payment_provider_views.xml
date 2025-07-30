@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Midtrans Provider Form View -->
+        <record id="payment_provider_form_midtrans" model="ir.ui.view">
+            <field name="name">payment.provider.form.midtrans</field>
+            <field name="model">payment.provider</field>
+            <field name="inherit_id" ref="payment.payment_provider_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='provider_credentials']" position="after">
+                    <group attrs="{'invisible': [('code', '!=', 'midtrans')]}" name="midtrans_credentials">
+                        <field name="midtrans_merchant_id" attrs="{'required': [('code', '=', 'midtrans'), ('state', '!=', 'disabled')]}"/>
+                        <field name="midtrans_client_key" attrs="{'required': [('code', '=', 'midtrans'), ('state', '!=', 'disabled')]}"/>
+                        <field name="midtrans_server_key" password="True" attrs="{'required': [('code', '=', 'midtrans'), ('state', '!=', 'disabled')]}"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='payment_method_ids']" position="after">
+                    <div attrs="{'invisible': [('code', '!=', 'midtrans')]}" class="alert alert-info">
+                        <h4>Midtrans Configuration Guide</h4>
+                        <p><strong>Notification URL:</strong> <code>/payment/midtrans/notify</code></p>
+                        <p><strong>Return URL:</strong> <code>/payment/midtrans/return</code></p>
+                        <p><strong>Supported Currencies:</strong> IDR, USD, SGD, MYR</p>
+                        <p><strong>Test Mode:</strong> Use Sandbox credentials for testing</p>
+                        <p><strong>Production:</strong> Switch to Production credentials when ready</p>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Midtrans Provider Tree View -->
+        <record id="payment_provider_tree_midtrans" model="ir.ui.view">
+            <field name="name">payment.provider.tree.midtrans</field>
+            <field name="model">payment.provider</field>
+            <field name="inherit_id" ref="payment.payment_provider_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="midtrans_merchant_id" attrs="{'invisible': [('code', '!=', 'midtrans')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

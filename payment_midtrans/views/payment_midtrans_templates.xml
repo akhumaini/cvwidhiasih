@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Midtrans Payment Form Template -->
+        <template id="midtrans_form" name="Midtrans Payment Form">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <img src="/payment_midtrans/static/src/img/midtrans_logo.png" 
+                             alt="Midtrans" style="height: 30px; margin-right: 10px;"/>
+                        Midtrans Payment
+                    </h5>
+                    <p class="card-text">
+                        You will be redirected to Midtrans secure payment page to complete your payment.
+                    </p>
+                    
+                    <div id="midtrans-payment-button" class="text-center">
+                        <button type="button" class="btn btn-primary btn-lg" id="pay-button">
+                            <i class="fa fa-credit-card"></i> Pay with Midtrans
+                        </button>
+                    </div>
+                    
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            Secure payment powered by Midtrans
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <script t-att-src="api_url" data-client-key="{{client_key}}"></script>
+            <script type="text/javascript">
+                document.getElementById('pay-button').onclick = function(){
+                    // Snap token from server
+                    snap.pay('<t t-esc="snap_token"/>', {
+                        // Optional
+                        onSuccess: function(result){
+                            console.log('Payment success:', result);
+                            window.location.href = '/payment/status';
+                        },
+                        // Optional
+                        onPending: function(result){
+                            console.log('Payment pending:', result);
+                            window.location.href = '/payment/status';
+                        },
+                        // Optional
+                        onError: function(result){
+                            console.log('Payment error:', result);
+                            window.location.href = '/payment/status?error=1';
+                        }
+                    });
+                };
+            </script>
+        </template>
+
+        <!-- Midtrans Redirect Template (fallback) -->
+        <template id="midtrans_redirect" name="Midtrans Redirect">
+            <div class="text-center">
+                <h3>Redirecting to Midtrans...</h3>
+                <p>Please wait while we redirect you to the secure payment page.</p>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="snap_redirect_url"/>';
+            </script>
+        </template>
+
+        <!-- Payment Icon Template -->
+        <template id="midtrans_icon" name="Midtrans Icon">
+            <span class="payment_icon_cc">
+                <img src="/payment_midtrans/static/src/img/midtrans_icon.png" 
+                     alt="Midtrans" style="height: 20px;"/>
+            </span>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_provider_midtrans_user,payment.provider.midtrans.user,payment.model_payment_provider,base.group_user,1,0,0,0
+access_payment_provider_midtrans_manager,payment.provider.midtrans.manager,payment.model_payment_provider,account.group_account_manager,1,1,1,1
+access_payment_transaction_midtrans_user,payment.transaction.midtrans.user,payment.model_payment_transaction,base.group_user,1,0,0,0
+access_payment_transaction_midtrans_manager,payment.transaction.midtrans.manager,payment.model_payment_transaction,account.group_account_manager,1,1,1,1

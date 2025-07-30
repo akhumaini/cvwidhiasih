@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Payment Provider: Midtrans -->
+        <record id="payment_provider_midtrans" model="payment.provider">
+            <field name="name">Midtrans</field>
+            <field name="code">midtrans</field>
+            <field name="sequence">10</field>
+            <field name="state">disabled</field>
+            <field name="is_published">False</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="main_currency_id" ref="base.IDR"/>
+            <field name="allow_tokenization">False</field>
+            <field name="allow_express_checkout">False</field>
+            <field name="capture_manually">False</field>
+            <field name="support_fees">True</field>
+            <field name="support_manual_capture">False</field>
+            <field name="support_refund">partial</field>
+            <field name="support_tokenization">False</field>
+            <field name="redirect_form_view_id" ref="midtrans_form"/>
+            <field name="inline_form_view_id" ref="midtrans_form"/>
+            <field name="token_inline_form_view_id" ref="midtrans_form"/>
+            <field name="express_checkout_form_view_id" ref="midtrans_form"/>
+        </record>
+
+        <!-- Payment Method: Credit Card -->
+        <record id="payment_method_midtrans_card" model="payment.method">
+            <field name="name">Credit/Debit Card</field>
+            <field name="code">card</field>
+            <field name="sequence">1</field>
+            <field name="active">True</field>
+            <field name="primary_payment_method_id" ref="payment.payment_method_card"/>
+            <field name="provider_ids" eval="[(4, ref('payment_provider_midtrans'))]"/>
+            <field name="supported_country_ids" eval="[(4, ref('base.id'))]"/>
+            <field name="supported_currency_ids" eval="[(4, ref('base.IDR')), (4, ref('base.USD'))]"/>
+        </record>
+
+        <!-- Payment Method: Bank Transfer -->
+        <record id="payment_method_midtrans_bank_transfer" model="payment.method">
+            <field name="name">Bank Transfer</field>
+            <field name="code">bank_transfer</field>
+            <field name="sequence">2</field>
+            <field name="active">True</field>
+            <field name="provider_ids" eval="[(4, ref('payment_provider_midtrans'))]"/>
+            <field name="supported_country_ids" eval="[(4, ref('base.id'))]"/>
+            <field name="supported_currency_ids" eval="[(4, ref('base.IDR'))]"/>
+        </record>
+
+        <!-- Payment Method: E-Wallet -->
+        <record id="payment_method_midtrans_ewallet" model="payment.method">
+            <field name="name">E-Wallet</field>
+            <field name="code">ewallet</field>
+            <field name="sequence">3</field>
+            <field name="active">True</field>
+            <field name="provider_ids" eval="[(4, ref('payment_provider_midtrans'))]"/>
+            <field name="supported_country_ids" eval="[(4, ref('base.id'))]"/>
+            <field name="supported_currency_ids" eval="[(4, ref('base.IDR'))]"/>
+        </record>
+
+        <!-- Payment Method: Over The Counter -->
+        <record id="payment_method_midtrans_otc" model="payment.method">
+            <field name="name">Over The Counter</field>
+            <field name="code">otc</field>
+            <field name="sequence">4</field>
+            <field name="active">True</field>
+            <field name="provider_ids" eval="[(4, ref('payment_provider_midtrans'))]"/>
+            <field name="supported_country_ids" eval="[(4, ref('base.id'))]"/>
+            <field name="supported_currency_ids" eval="[(4, ref('base.IDR'))]"/>
+        </record>
+
+        <!-- Payment Method: Cardless Credit -->
+        <record id="payment_method_midtrans_cardless" model="payment.method">
+            <field name="name">Cardless Credit</field>
+            <field name="code">cardless</field>
+            <field name="sequence">5</field>
+            <field name="active">True</field>
+            <field name="provider_ids" eval="[(4, ref('payment_provider_midtrans'))]"/>
+            <field name="supported_country_ids" eval="[(4, ref('base.id'))]"/>
+            <field name="supported_currency_ids" eval="[(4, ref('base.IDR'))]"/>
+        </record>
+
+    </data>
+</odoo>
