@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Purchase Order Form View to add batch fields -->
+    <record id="view_purchase_order_form_batch" model="ir.ui.view">
+        <field name="name">purchase.order.form.batch</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="batch_id" readonly="1" 
+                       attrs="{'invisible': [('batch_id', '=', False)]}"/>
+                <field name="batch_state" readonly="1" 
+                       attrs="{'invisible': [('batch_id', '=', False)]}"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Purchase Order Tree View to add batch fields -->
+    <record id="view_purchase_order_tree_batch" model="ir.ui.view">
+        <field name="name">purchase.order.tree.batch</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="batch_id" optional="hide"/>
+                <field name="batch_state" optional="hide" widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Purchase Order Search View to add batch filters -->
+    <record id="view_purchase_order_filter_batch" model="ir.ui.view">
+        <field name="name">purchase.order.search.batch</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="batch_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='approved']" position="after">
+                <separator/>
+                <filter string="In Batch" name="in_batch" domain="[('batch_id', '!=', False)]"/>
+                <filter string="Not in Batch" name="not_in_batch" domain="[('batch_id', '=', False)]"/>
+                <filter string="Batchable" name="batchable" 
+                        domain="[('state', 'in', ['draft', 'sent', 'to approve']), ('batch_id', '=', False)]"/>
+            </xpath>
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter string="Batch" name="group_batch" context="{'group_by': 'batch_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action to create batch from selected POs -->
+    <record id="action_purchase_create_batch" model="ir.actions.server">
+        <field name="name">Create Batch</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_create_batch()
+        </field>
+    </record>
+
+    <!-- Server action to remove PO from batch -->
+    <record id="action_purchase_remove_from_batch" model="ir.actions.server">
+        <field name="name">Remove from Batch</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    records.action_remove_from_batch()
+        </field>
+    </record>
+
+</odoo>

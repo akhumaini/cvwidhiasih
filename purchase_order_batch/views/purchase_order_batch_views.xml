@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Purchase Order Batch Tree View -->
+    <record id="view_purchase_order_batch_tree" model="ir.ui.view">
+        <field name="name">purchase.order.batch.tree</field>
+        <field name="model">purchase.order.batch</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Order Batches" decoration-info="state=='draft'" 
+                  decoration-warning="state=='confirmed'" decoration-success="state=='done'"
+                  decoration-muted="state=='cancelled'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="purchase_order_count"/>
+                <field name="total_amount" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="date_planned"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state=='draft'"
+                       decoration-warning="state in ['confirmed','processing']"
+                       decoration-success="state=='done'"
+                       decoration-danger="state=='cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Purchase Order Batch Form View -->
+    <record id="view_purchase_order_batch_form" model="ir.ui.view">
+        <field name="name">purchase.order.batch.form</field>
+        <field name="model">purchase.order.batch</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Order Batch">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm Batch" 
+                            class="btn-primary" states="draft"/>
+                    <button name="action_process" type="object" string="Process Batch" 
+                            class="btn-primary" states="confirmed"/>
+                    <button name="action_cancel" type="object" string="Cancel" 
+                            states="draft,confirmed"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft" 
+                            states="cancelled"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed,processing,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_orders" type="object" 
+                                class="oe_stat_button" icon="fa-shopping-cart">
+                            <field name="purchase_order_count" widget="statinfo" 
+                                   string="Purchase Orders"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="date_planned"/>
+                            <field name="total_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Purchase Orders" name="purchase_orders">
+                            <field name="purchase_order_ids" readonly="state != 'draft'">
+                                <tree string="Purchase Orders" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="date_order"/>
+                                    <field name="date_planned"/>
+                                    <field name="amount_total" widget="monetary"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" widget="badge"/>
+                                    <button name="action_remove_from_batch" type="object" 
+                                            string="Remove" icon="fa-times" 
+                                            attrs="{'invisible': [('parent.state', '!=', 'draft')]}"/>
+                                </tree>
+                            </field>
+                            <div class="oe_clear"/>
+                            <group class="oe_subtotal_footer oe_right" name="batch_total">
+                                <field name="total_amount" widget="monetary" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Vendors" name="vendors">
+                            <field name="partner_ids" readonly="1">
+                                <tree string="Vendors">
+                                    <field name="name"/>
+                                    <field name="email"/>
+                                    <field name="phone"/>
+                                    <field name="category_id" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Add notes about this batch..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Purchase Order Batch Kanban View -->
+    <record id="view_purchase_order_batch_kanban" model="ir.ui.view">
+        <field name="name">purchase.order.batch.kanban</field>
+        <field name="model">purchase.order.batch</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="state">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="purchase_order_count"/>
+                <field name="total_amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <field name="date_planned"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <span class="o_kanban_record_subtitle">
+                                    <field name="user_id"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div class="o_kanban_tags_section">
+                                    <span class="badge badge-pill">
+                                        <i class="fa fa-shopping-cart"/> 
+                                        <field name="purchase_order_count"/> POs
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="total_amount" widget="monetary"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="date_planned"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Purchase Order Batch Search View -->
+    <record id="view_purchase_order_batch_search" model="ir.ui.view">
+        <field name="name">purchase.order.batch.search</field>
+        <field name="model">purchase.order.batch</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Order Batches">
+                <field name="name" string="Batch" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="user_id"/>
+                <field name="partner_ids" string="Vendor"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Processing" name="processing" domain="[('state', '=', 'processing')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="My Batches" name="my_batches" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="This Month" name="this_month" 
+                        domain="[('create_date', '>=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Purchase Order Batch Action -->
+    <record id="action_purchase_order_batch" model="ir.actions.act_window">
+        <field name="name">Purchase Order Batches</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order.batch</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_purchase_order_batch_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Purchase Order Batch!
+            </p>
+            <p>
+                Group multiple purchase orders into batches for efficient processing.
+                You can confirm and process multiple POs together.
+            </p>
+        </field>
+    </record>
+
+</odoo>
