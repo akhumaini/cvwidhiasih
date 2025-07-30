@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Purchase Batch Wizard Form View -->
+    <record id="view_purchase_batch_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.batch.wizard.form</field>
+        <field name="model">purchase.batch.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Purchase Order Batch">
+                <group>
+                    <field name="name" placeholder="Leave empty to auto-generate"/>
+                </group>
+                <group string="Filters">
+                    <field name="partner_filter_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <group string="Purchase Orders">
+                    <field name="purchase_order_ids" nolabel="1" widget="many2many" height="300">
+                        <tree string="Available Purchase Orders" decoration-info="state=='draft'" 
+                              decoration-warning="state=='sent'" decoration-success="state=='to approve'">
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="date_order"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" widget="badge"/>
+                        </tree>
+                    </field>
+                </group>
+                <group string="Notes">
+                    <field name="notes" nolabel="1" placeholder="Add notes about this batch..."/>
+                </group>
+                <footer>
+                    <button name="action_create_batch" string="Create Batch" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Purchase Batch Add Wizard Form View -->
+    <record id="view_purchase_batch_add_wizard_form" model="ir.ui.view">
+        <field name="name">purchase.batch.add.wizard.form</field>
+        <field name="model">purchase.batch.add.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Purchase Orders to Batch">
+                <group>
+                    <field name="batch_id" options="{'no_create': True}"/>
+                </group>
+                <group string="Purchase Orders to Add">
+                    <field name="purchase_order_ids" nolabel="1" widget="many2many" height="300">
+                        <tree string="Available Purchase Orders" decoration-info="state=='draft'" 
+                              decoration-warning="state=='sent'" decoration-success="state=='to approve'">
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="date_order"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" widget="badge"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="action_add_to_batch" string="Add to Batch" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Purchase Batch Wizard -->
+    <record id="action_purchase_batch_wizard" model="ir.actions.act_window">
+        <field name="name">Create Purchase Order Batch</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.batch.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <!-- Action for Purchase Batch Add Wizard -->
+    <record id="action_purchase_batch_add_wizard" model="ir.actions.act_window">
+        <field name="name">Add Purchase Orders to Batch</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.batch.add.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

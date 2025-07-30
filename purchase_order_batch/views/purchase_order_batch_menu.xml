@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Purchase Order Batch Menu -->
+    <menuitem id="menu_purchase_order_batch_root" 
+              name="Purchase Batches" 
+              parent="purchase.menu_purchase_root" 
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_order_batch" 
+              name="Batches" 
+              action="action_purchase_order_batch" 
+              parent="menu_purchase_order_batch_root" 
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_batch_wizard" 
+              name="Create Batch" 
+              action="action_purchase_batch_wizard" 
+              parent="menu_purchase_order_batch_root" 
+              sequence="20"/>
+
+</odoo>
