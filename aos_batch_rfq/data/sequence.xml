@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch RFQ Sequence -->
+    <record id="sequence_batch_rfq" model="ir.sequence">
+        <field name="name">Batch RFQ</field>
+        <field name="code">batch.rfq</field>
+        <field name="prefix">BRFQ</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="implementation">standard</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_batch_rfq_main" name="Batch RFQ" sequence="10" web_icon="aos_batch_rfq,static/description/icon.png"/>
+
+    <!-- Sub Menus -->
+    <menuitem id="menu_batch_rfq_operations" name="Operations" parent="menu_batch_rfq_main" sequence="10"/>
+    <menuitem id="menu_batch_rfq_configuration" name="Configuration" parent="menu_batch_rfq_main" sequence="90"/>
+    <menuitem id="menu_batch_rfq_reporting" name="Reporting" parent="menu_batch_rfq_main" sequence="80"/>
+
+    <!-- Operations Menu Items -->
+    <menuitem id="menu_batch_rfq" name="Batch RFQs" parent="menu_batch_rfq_operations" 
+              action="action_batch_rfq" sequence="10"/>
+    <menuitem id="menu_batch_rfq_lines" name="RFQ Lines" parent="menu_batch_rfq_operations" 
+              action="action_batch_rfq_line" sequence="20"/>
+
+    <!-- Configuration Menu Items -->
+    <menuitem id="menu_purchase_category" name="Purchase Categories" parent="menu_batch_rfq_configuration" 
+              action="action_purchase_category" sequence="10"/>
+
+    <!-- Add to Purchase Menu -->
+    <menuitem id="menu_purchase_batch_rfq" name="Batch RFQs" parent="purchase.menu_purchase_root" 
+              action="action_batch_rfq" sequence="15"/>
+
+</odoo>

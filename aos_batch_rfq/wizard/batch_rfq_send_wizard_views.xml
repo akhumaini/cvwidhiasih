@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch RFQ Send Wizard Form View -->
+    <record id="view_batch_rfq_send_wizard_form" model="ir.ui.view">
+        <field name="name">batch.rfq.send.wizard.form</field>
+        <field name="model">batch.rfq.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Batch RFQs">
+                <sheet>
+                    <group>
+                        <field name="batch_rfq_id" readonly="1"/>
+                    </group>
+                    
+                    <group string="Email Template">
+                        <field name="email_template_id"/>
+                        <field name="subject" readonly="1"/>
+                    </group>
+                    
+                    <group string="Send Options">
+                        <group>
+                            <field name="send_method" widget="radio"/>
+                            <field name="rfq_selection" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="force_send"/>
+                            <field name="add_attachment"/>
+                        </group>
+                    </group>
+                    
+                    <!-- RFQ Selection Options -->
+                    <group string="Selected RFQs" attrs="{'invisible': [('rfq_selection', '!=', 'selected')]}">
+                        <field name="purchase_order_ids" nolabel="1" widget="many2many_checkboxes"/>
+                    </group>
+                    
+                    <group string="Vendor Selection" attrs="{'invisible': [('rfq_selection', '!=', 'by_vendor')]}">
+                        <field name="vendor_ids" nolabel="1" widget="many2many_tags"/>
+                    </group>
+                    
+                    <group string="Status Selection" attrs="{'invisible': [('rfq_selection', '!=', 'by_status')]}">
+                        <field name="po_states"/>
+                    </group>
+                    
+                    <!-- Summary -->
+                    <group string="Summary">
+                        <group>
+                            <field name="total_rfqs" readonly="1"/>
+                            <field name="selected_rfqs" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Custom Message -->
+                    <group string="Custom Message">
+                        <field name="custom_message" nolabel="1" placeholder="Additional message to include in emails..."/>
+                    </group>
+                    
+                    <!-- Email Preview -->
+                    <group string="Email Preview" attrs="{'invisible': [('email_template_id', '=', False)]}">
+                        <field name="body_html" nolabel="1" readonly="1" widget="html"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_send_rfqs" type="object" string="Send RFQs" class="oe_highlight"/>
+                    <button name="action_preview_email" type="object" string="Preview Email" class="btn-secondary"/>
+                    <button name="action_test_send" type="object" string="Test Send" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Send Wizard -->
+    <record id="action_batch_rfq_send_wizard" model="ir.actions.act_window">
+        <field name="name">Send Batch RFQs</field>
+        <field name="res_model">batch.rfq.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_batch_rfq"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>
