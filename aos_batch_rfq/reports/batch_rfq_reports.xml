@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch RFQ Report Views -->
+    <record id="view_batch_rfq_report_pivot" model="ir.ui.view">
+        <field name="name">batch.rfq.report.pivot</field>
+        <field name="model">batch.rfq.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Batch RFQ Analysis">
+                <field name="date_created" type="row" interval="month"/>
+                <field name="state" type="col"/>
+                <field name="estimated_amount" type="measure"/>
+                <field name="vendor_quoted_amount" type="measure"/>
+                <field name="total_lines" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_batch_rfq_report_graph" model="ir.ui.view">
+        <field name="name">batch.rfq.report.graph</field>
+        <field name="model">batch.rfq.report</field>
+        <field name="arch" type="xml">
+            <graph string="Batch RFQ Analysis" type="bar">
+                <field name="state"/>
+                <field name="estimated_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_batch_rfq_report_tree" model="ir.ui.view">
+        <field name="name">batch.rfq.report.tree</field>
+        <field name="model">batch.rfq.report</field>
+        <field name="arch" type="xml">
+            <tree string="Batch RFQ Analysis" create="false" edit="false">
+                <field name="batch_rfq_name"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="product_qty"/>
+                <field name="estimated_amount" widget="monetary"/>
+                <field name="vendor_quoted_amount" widget="monetary"/>
+                <field name="price_variance" decoration-danger="price_variance &gt; 10" 
+                       decoration-success="price_variance &lt; 0"/>
+                <field name="line_state"/>
+                <field name="po_state"/>
+                <field name="response_time"/>
+                <field name="is_overdue"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_batch_rfq_report_search" model="ir.ui.view">
+        <field name="name">batch.rfq.report.search</field>
+        <field name="model">batch.rfq.report</field>
+        <field name="arch" type="xml">
+            <search string="Batch RFQ Analysis">
+                <field name="batch_rfq_name"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="category_id"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Sent" name="sent" domain="[('state', '=', 'sent')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Overdue" name="overdue" domain="[('is_overdue', '=', True)]"/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                <filter string="Price Variance > 10%" name="high_variance" domain="[('price_variance', '>', 10)]"/>
+                <separator/>
+                <filter string="Creation Date" name="creation_date" date="date_created"/>
+                <filter string="Deadline" name="deadline" date="date_deadline"/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Vendor" name="group_vendor" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product Category" name="group_product_categ" context="{'group_by': 'product_categ_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Creation Date" name="group_creation_date" context="{'group_by': 'date_created:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Batch RFQ Report -->
+    <record id="action_batch_rfq_report" model="ir.actions.act_window">
+        <field name="name">Batch RFQ Analysis</field>
+        <field name="res_model">batch.rfq.report</field>
+        <field name="view_mode">pivot,graph,tree</field>
+        <field name="search_view_id" ref="view_batch_rfq_report_search"/>
+        <field name="context">{'search_default_sent': 1}</field>
+    </record>
+
+    <!-- Menu for Reports -->
+    <menuitem id="menu_batch_rfq_report" name="Batch RFQ Analysis" parent="menu_batch_rfq_reporting" 
+              action="action_batch_rfq_report" sequence="10"/>
+
+    <!-- PDF Report for Batch RFQ -->
+    <record id="report_batch_rfq" model="ir.actions.report">
+        <field name="name">Batch RFQ Summary</field>
+        <field name="model">batch.rfq</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">aos_batch_rfq.batch_rfq_document</field>
+        <field name="report_file">aos_batch_rfq.batch_rfq_document</field>
+        <field name="binding_model_id" ref="model_batch_rfq"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

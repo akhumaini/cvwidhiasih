@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Purchase Categories -->
+    <record id="category_office_supplies" model="purchase.category">
+        <field name="name">Office Supplies</field>
+        <field name="code">OFF</field>
+        <field name="description">Office supplies and equipment</field>
+    </record>
+    
+    <record id="category_it_equipment" model="purchase.category">
+        <field name="name">IT Equipment</field>
+        <field name="code">IT</field>
+        <field name="description">Information technology equipment and accessories</field>
+    </record>
+
+    <!-- Demo Batch RFQ Template -->
+    <record id="template_office_supplies" model="batch.rfq.template">
+        <field name="name">Office Supplies Template</field>
+        <field name="description">Standard office supplies procurement template</field>
+        <field name="category_id" ref="category_office_supplies"/>
+    </record>
+
+    <!-- Demo Batch RFQ Template Lines -->
+    <record id="template_line_paper" model="batch.rfq.template.line">
+        <field name="template_id" ref="template_office_supplies"/>
+        <field name="sequence">10</field>
+        <field name="name">A4 Paper</field>
+        <field name="product_qty">10</field>
+        <field name="estimated_price">5.00</field>
+    </record>
+    
+    <record id="template_line_pens" model="batch.rfq.template.line">
+        <field name="template_id" ref="template_office_supplies"/>
+        <field name="sequence">20</field>
+        <field name="name">Ballpoint Pens</field>
+        <field name="product_qty">50</field>
+        <field name="estimated_price">0.50</field>
+    </record>
+
+    <!-- Demo Batch RFQ -->
+    <record id="demo_batch_rfq_001" model="batch.rfq">
+        <field name="name">BRFQ00001</field>
+        <field name="description">Q1 Office Supplies Procurement</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="category_id" ref="category_office_supplies"/>
+        <field name="priority">1</field>
+        <field name="state">draft</field>
+        <field name="date_deadline" eval="(DateTime.now() + timedelta(days=15))"/>
+    </record>
+
+</odoo>

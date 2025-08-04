@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch RFQ Wizard Form View -->
+    <record id="view_batch_rfq_wizard_form" model="ir.ui.view">
+        <field name="name">batch.rfq.wizard.form</field>
+        <field name="model">batch.rfq.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Batch RFQ">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="date_deadline"/>
+                        </group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="creation_method" widget="radio"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Manual Entry -->
+                    <group string="RFQ Lines" attrs="{'invisible': [('creation_method', '!=', 'manual')]}">
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                                <field name="estimated_price"/>
+                                <field name="date_required"/>
+                                <field name="date_deadline"/>
+                            </tree>
+                        </field>
+                    </group>
+                    
+                    <!-- From Products -->
+                    <group string="Product Selection" attrs="{'invisible': [('creation_method', '!=', 'from_products')]}">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="vendor_ids" widget="many2many_tags"/>
+                    </group>
+                    
+                    <!-- From Template -->
+                    <group string="Template Selection" attrs="{'invisible': [('creation_method', '!=', 'from_template')]}">
+                        <field name="template_id"/>
+                    </group>
+                    
+                    <!-- Options -->
+                    <group string="Options">
+                        <group>
+                            <field name="auto_send"/>
+                            <field name="email_template_id" attrs="{'invisible': [('auto_send', '=', False)]}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_create_batch_rfq" type="object" string="Create Batch RFQ" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Batch RFQ Wizard Line Form View -->
+    <record id="view_batch_rfq_wizard_line_form" model="ir.ui.view">
+        <field name="name">batch.rfq.wizard.line.form</field>
+        <field name="model">batch.rfq.wizard.line</field>
+        <field name="arch" type="xml">
+            <form string="RFQ Line">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                            <field name="product_uom_id"/>
+                            <field name="estimated_price"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="date_required"/>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Batch RFQ Template Views -->
+    <record id="view_batch_rfq_template_tree" model="ir.ui.view">
+        <field name="name">batch.rfq.template.tree</field>
+        <field name="model">batch.rfq.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="category_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_batch_rfq_template_form" model="ir.ui.view">
+        <field name="name">batch.rfq.template.form</field>
+        <field name="model">batch.rfq.template</field>
+        <field name="arch" type="xml">
+            <form string="Batch RFQ Template">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="Template Lines">
+                        <field name="line_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id"/>
+                                <field name="estimated_price"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_batch_rfq_wizard" model="ir.actions.act_window">
+        <field name="name">Create Batch RFQ</field>
+        <field name="res_model">batch.rfq.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_batch_rfq_template" model="ir.actions.act_window">
+        <field name="name">Batch RFQ Templates</field>
+        <field name="res_model">batch.rfq.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_batch_rfq_template" name="RFQ Templates" parent="aos_batch_rfq.menu_batch_rfq_configuration" 
+              action="action_batch_rfq_template" sequence="20"/>
+
+</odoo>

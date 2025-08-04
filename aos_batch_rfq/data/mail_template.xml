@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template for Batch RFQ -->
+    <record id="email_template_batch_rfq" model="mail.template">
+        <field name="name">Batch RFQ - Request for Quotation</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="subject">Request for Quotation (Ref ${object.name or 'n/a'})</field>
+        <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.partner_id.email | safe}</field>
+        <field name="description">Sent to vendor when requesting quotation from batch RFQ</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name},
+        <br/><br/>
+        We would like to request a quotation for the following products:
+        <br/><br/>
+        % if object.batch_rfq_id:
+        <strong>Batch RFQ Reference:</strong> ${object.batch_rfq_id.name}<br/>
+        <strong>Description:</strong> ${object.batch_rfq_id.description}<br/>
+        % if object.batch_rfq_id.date_deadline:
+        <strong>Response Deadline:</strong> ${format_date(object.batch_rfq_id.date_deadline)}<br/>
+        % endif
+        <br/>
+        % endif
+        
+        <table border="1" style="border-collapse: collapse; width: 100%;">
+            <thead>
+                <tr style="background-color: #f0f0f0;">
+                    <th style="padding: 8px; text-align: left;">Product</th>
+                    <th style="padding: 8px; text-align: center;">Quantity</th>
+                    <th style="padding: 8px; text-align: center;">Unit</th>
+                    <th style="padding: 8px; text-align: center;">Required Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                % for line in object.order_line:
+                <tr>
+                    <td style="padding: 8px;">${line.name}</td>
+                    <td style="padding: 8px; text-align: center;">${line.product_qty}</td>
+                    <td style="padding: 8px; text-align: center;">${line.product_uom.name}</td>
+                    <td style="padding: 8px; text-align: center;">${format_date(line.date_planned)}</td>
+                </tr>
+                % endfor
+            </tbody>
+        </table>
+        
+        <br/>
+        Please provide your best quotation including:
+        <ul>
+            <li>Unit prices</li>
+            <li>Delivery terms and dates</li>
+            <li>Payment terms</li>
+            <li>Validity period of the quotation</li>
+        </ul>
+        
+        % if object.notes:
+        <p><strong>Additional Notes:</strong></p>
+        <p>${object.notes | safe}</p>
+        % endif
+        
+        <br/>
+        Thank you for your attention. We look forward to your prompt response.
+        <br/><br/>
+        Best regards,<br/>
+        ${object.user_id.name}<br/>
+        ${object.company_id.name}
+    </p>
+</div>
+        </field>
+        <field name="report_template" ref="purchase.action_report_purchase_order"/>
+        <field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

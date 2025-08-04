@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch RFQ Tree View -->
+    <record id="view_batch_rfq_tree" model="ir.ui.view">
+        <field name="name">batch.rfq.tree</field>
+        <field name="model">batch.rfq</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state=='draft'" decoration-warning="state=='confirmed'" 
+                  decoration-success="state=='done'" decoration-muted="state=='cancelled'">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="user_id"/>
+                <field name="date_created"/>
+                <field name="date_deadline"/>
+                <field name="total_rfq_count"/>
+                <field name="progress_percentage" widget="progressbar"/>
+                <field name="total_estimated_amount" widget="monetary"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" decoration-bf="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Batch RFQ Form View -->
+    <record id="view_batch_rfq_form" model="ir.ui.view">
+        <field name="name">batch.rfq.form</field>
+        <field name="model">batch.rfq</field>
+        <field name="arch" type="xml">
+            <form string="Batch RFQ">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" 
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_generate_rfqs" type="object" string="Generate RFQs" 
+                            class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                    <button name="action_send_rfqs" type="object" string="Send RFQs" 
+                            class="btn-primary" attrs="{'invisible': [('state', 'not in', ['confirmed', 'sent'])]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" 
+                            attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}"/>
+                    <button name="action_set_to_draft" type="object" string="Set to Draft" 
+                            attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,sent,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_purchase_orders" icon="fa-shopping-cart">
+                            <field string="RFQs" name="total_rfq_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="description" required="1"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority"/>
+                            <field name="date_created" readonly="1"/>
+                            <field name="date_deadline"/>
+                            <field name="date_sent" readonly="1" attrs="{'invisible': [('date_sent', '=', False)]}"/>
+                            <field name="date_completed" readonly="1" attrs="{'invisible': [('date_completed', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group string="Progress">
+                        <group>
+                            <field name="total_rfq_count"/>
+                            <field name="sent_rfq_count"/>
+                            <field name="received_rfq_count"/>
+                        </group>
+                        <group>
+                            <field name="progress_percentage" widget="progressbar"/>
+                            <field name="total_estimated_amount" widget="monetary"/>
+                            <field name="total_received_amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="RFQ Lines">
+                            <field name="batch_rfq_line_ids" context="{'default_batch_rfq_id': id}">
+                                <tree editable="bottom" decoration-info="state=='draft'" 
+                                      decoration-warning="state=='sent'" decoration-success="state=='received'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="estimated_price" widget="monetary"/>
+                                    <field name="estimated_amount" widget="monetary"/>
+                                    <field name="date_required"/>
+                                    <field name="date_deadline"/>
+                                    <field name="state"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <button name="action_view_rfq" type="object" string="View RFQ" 
+                                            icon="fa-external-link" attrs="{'invisible': [('purchase_order_id', '=', False)]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Purchase Orders">
+                            <field name="purchase_order_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="date_order"/>
+                                    <field name="amount_total" widget="monetary"/>
+                                    <field name="state"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Email &amp; Communication">
+                            <group>
+                                <field name="email_template_id"/>
+                            </group>
+                            <field name="notes" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Batch RFQ Search View -->
+    <record id="view_batch_rfq_search" model="ir.ui.view">
+        <field name="name">batch.rfq.search</field>
+        <field name="model">batch.rfq</field>
+        <field name="arch" type="xml">
+            <search string="Batch RFQ Search">
+                <field name="name" string="Batch RFQ" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="description"/>
+                <field name="user_id"/>
+                <field name="category_id"/>
+                <separator/>
+                <filter string="My Batch RFQs" name="my_batch_rfqs" domain="[('user_id', '=', uid)]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Sent" name="sent" domain="[('state', '=', 'sent')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                <filter string="Overdue" name="overdue" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('state', 'not in', ['done', 'cancelled'])]"/>
+                <separator/>
+                <filter string="Creation Date" name="creation_date" date="date_created"/>
+                <filter string="Deadline" name="deadline" date="date_deadline"/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Creation Date" name="group_creation_date" context="{'group_by': 'date_created:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Batch RFQ Kanban View -->
+    <record id="view_batch_rfq_kanban" model="ir.ui.view">
+        <field name="name">batch.rfq.kanban</field>
+        <field name="model">batch.rfq</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="user_id"/>
+                <field name="date_deadline"/>
+                <field name="progress_percentage"/>
+                <field name="total_rfq_count"/>
+                <field name="priority"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_top_right">
+                                    <field name="priority" widget="priority"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="description"/>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <span class="badge badge-pill">
+                                            <field name="total_rfq_count"/> RFQs
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="progress_percentage" widget="progressbar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Purchase Category Views -->
+    <record id="view_purchase_category_tree" model="ir.ui.view">
+        <field name="name">purchase.category.tree</field>
+        <field name="model">purchase.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_purchase_category_form" model="ir.ui.view">
+        <field name="name">purchase.category.form</field>
+        <field name="model">purchase.category</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Category">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions for Batch RFQ -->
+    <record id="action_batch_rfq" model="ir.actions.act_window">
+        <field name="name">Batch RFQs</field>
+        <field name="res_model">batch.rfq</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_batch_rfq_search"/>
+        <field name="context">{'search_default_my_batch_rfqs': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Batch RFQ!
+            </p>
+            <p>
+                Batch RFQs allow you to manage multiple Request for Quotations 
+                in a single workflow, similar to batch transfers.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for Purchase Categories -->
+    <record id="action_purchase_category" model="ir.actions.act_window">
+        <field name="name">Purchase Categories</field>
+        <field name="res_model">purchase.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

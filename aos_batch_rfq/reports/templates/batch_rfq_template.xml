@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="batch_rfq_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>
+                                    <span t-field="doc.name"/>
+                                    <small class="text-muted">
+                                        - <span t-field="doc.state"/>
+                                    </small>
+                                </h2>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Description:</strong><br/>
+                                <span t-field="doc.description"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Responsible:</strong> <span t-field="doc.user_id.name"/><br/>
+                                <strong>Creation Date:</strong> <span t-field="doc.date_created" t-options="{'widget': 'datetime'}"/><br/>
+                                <t t-if="doc.date_deadline">
+                                    <strong>Deadline:</strong> <span t-field="doc.date_deadline" t-options="{'widget': 'datetime'}"/><br/>
+                                </t>
+                                <strong>Priority:</strong> 
+                                <span t-if="doc.priority == '0'">Low</span>
+                                <span t-if="doc.priority == '1'">Normal</span>
+                                <span t-if="doc.priority == '2'">High</span>
+                                <span t-if="doc.priority == '3'">Very High</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Summary -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Progress Summary</h4>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Total RFQs:</strong></td>
+                                        <td><span t-field="doc.total_rfq_count"/></td>
+                                        <td><strong>Sent:</strong></td>
+                                        <td><span t-field="doc.sent_rfq_count"/></td>
+                                        <td><strong>Received:</strong></td>
+                                        <td><span t-field="doc.received_rfq_count"/></td>
+                                        <td><strong>Progress:</strong></td>
+                                        <td><span t-field="doc.progress_percentage"/>%</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- RFQ Lines -->
+                        <div class="row mt32">
+                            <div class="col-12">
+                                <h4>RFQ Lines</h4>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Vendor</th>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>UoM</th>
+                                            <th>Estimated Price</th>
+                                            <th>Estimated Amount</th>
+                                            <th>Quoted Price</th>
+                                            <th>Variance</th>
+                                            <th>Status</th>
+                                            <th>Required Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.batch_rfq_line_ids" t-as="line">
+                                            <tr>
+                                                <td><span t-field="line.partner_id.name"/></td>
+                                                <td><span t-field="line.name"/></td>
+                                                <td class="text-right"><span t-field="line.product_qty"/></td>
+                                                <td><span t-field="line.product_uom_id.name"/></td>
+                                                <td class="text-right">
+                                                    <span t-field="line.estimated_price" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-field="line.estimated_amount" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-if="line.vendor_quoted_price" 
+                                                          t-field="line.vendor_quoted_price" 
+                                                          t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                                                    <span t-if="not line.vendor_quoted_price">-</span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-if="line.price_variance != 0" 
+                                                          t-field="line.price_variance" 
+                                                          t-options="{'precision': 2}"/>%
+                                                    <span t-if="line.price_variance == 0">-</span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-info" t-if="line.state == 'draft'">Draft</span>
+                                                    <span class="badge badge-warning" t-if="line.state == 'sent'">Sent</span>
+                                                    <span class="badge badge-success" t-if="line.state == 'received'">Received</span>
+                                                    <span class="badge badge-primary" t-if="line.state == 'selected'">Selected</span>
+                                                    <span class="badge badge-secondary" t-if="line.state == 'cancelled'">Cancelled</span>
+                                                </td>
+                                                <td>
+                                                    <span t-if="line.date_required" t-field="line.date_required"/>
+                                                    <span t-if="not line.date_required">-</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Purchase Orders -->
+                        <t t-if="doc.purchase_order_ids">
+                            <div class="row mt32">
+                                <div class="col-12">
+                                    <h4>Generated Purchase Orders</h4>
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>PO Number</th>
+                                                <th>Vendor</th>
+                                                <th>Order Date</th>
+                                                <th>Total Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.purchase_order_ids" t-as="po">
+                                                <tr>
+                                                    <td><span t-field="po.name"/></td>
+                                                    <td><span t-field="po.partner_id.name"/></td>
+                                                    <td><span t-field="po.date_order" t-options="{'widget': 'date'}"/></td>
+                                                    <td class="text-right">
+                                                        <span t-field="po.amount_total" 
+                                                              t-options="{'widget': 'monetary', 'display_currency': po.currency_id}"/>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge badge-info" t-if="po.state == 'draft'">RFQ</span>
+                                                        <span class="badge badge-warning" t-if="po.state == 'sent'">RFQ Sent</span>
+                                                        <span class="badge badge-primary" t-if="po.state == 'to approve'">To Approve</span>
+                                                        <span class="badge badge-success" t-if="po.state == 'purchase'">Purchase Order</span>
+                                                        <span class="badge badge-dark" t-if="po.state == 'done'">Locked</span>
+                                                        <span class="badge badge-secondary" t-if="po.state == 'cancel'">Cancelled</span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                        
+                        <!-- Notes -->
+                        <t t-if="doc.notes">
+                            <div class="row mt32">
+                                <div class="col-12">
+                                    <h4>Internal Notes</h4>
+                                    <div t-field="doc.notes"/>
+                                </div>
+                            </div>
+                        </t>
+                        
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

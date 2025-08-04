@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_batch_rfq_user,batch.rfq.user,model_batch_rfq,group_batch_rfq_user,1,1,1,0
+access_batch_rfq_manager,batch.rfq.manager,model_batch_rfq,group_batch_rfq_manager,1,1,1,1
+access_batch_rfq_line_user,batch.rfq.line.user,model_batch_rfq_line,group_batch_rfq_user,1,1,1,0
+access_batch_rfq_line_manager,batch.rfq.line.manager,model_batch_rfq_line,group_batch_rfq_manager,1,1,1,1
+access_batch_rfq_wizard_user,batch.rfq.wizard.user,model_batch_rfq_wizard,group_batch_rfq_user,1,1,1,1
+access_batch_rfq_wizard_line_user,batch.rfq.wizard.line.user,model_batch_rfq_wizard_line,group_batch_rfq_user,1,1,1,1
+access_batch_rfq_send_wizard_user,batch.rfq.send.wizard.user,model_batch_rfq_send_wizard,group_batch_rfq_user,1,1,1,1
+access_batch_rfq_template_user,batch.rfq.template.user,model_batch_rfq_template,group_batch_rfq_user,1,0,0,0
+access_batch_rfq_template_manager,batch.rfq.template.manager,model_batch_rfq_template,group_batch_rfq_manager,1,1,1,1
+access_batch_rfq_template_line_user,batch.rfq.template.line.user,model_batch_rfq_template_line,group_batch_rfq_user,1,0,0,0
+access_batch_rfq_template_line_manager,batch.rfq.template.line.manager,model_batch_rfq_template_line,group_batch_rfq_manager,1,1,1,1
+access_purchase_category_user,purchase.category.user,model_purchase_category,group_batch_rfq_user,1,0,0,0
+access_purchase_category_manager,purchase.category.manager,model_purchase_category,group_batch_rfq_manager,1,1,1,1
+access_batch_rfq_public,batch.rfq.public,model_batch_rfq,base.group_public,1,0,0,0
+access_batch_rfq_portal,batch.rfq.portal,model_batch_rfq,base.group_portal,1,0,0,0
